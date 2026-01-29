@@ -1,4 +1,4 @@
-package com.example.template;
+package com.example.gridgame;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -22,7 +22,7 @@ public class HelloController {
     public TextField userCoord;
     private Button[][] btn;
 
-    private GameManager game = new GameManager();
+    private Game game = new Game();
 
     //get two bots on the screen solving the maze
     // 1. have them both go at same time 2. one at a time
@@ -51,13 +51,11 @@ public class HelloController {
         }
 
         blank();
-
-        // same structure, now for MouseEvent
         EventHandler<MouseEvent> z = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println(event.getSource());
-//                gpane.setGridLinesVisible(true);
+
                 Button clicked = (Button) event.getSource();
                 int row = GridPane.getRowIndex(clicked);
                 int col = GridPane.getColumnIndex(clicked);
@@ -65,20 +63,11 @@ public class HelloController {
 
                 if (event.getButton() == MouseButton.PRIMARY) {
                     System.out.println("LEFT click");
-                    //game.getTiles()[row][col].setValue(2);
-                    if (game.getTiles()[row][col].getValue() == 4){
-                        System.out.println("border");
-                    }else{
-                        System.out.println("no border");
-                    }
-
-
                 } else if (event.getButton() == MouseButton.SECONDARY) {
                     System.out.println("RIGHT click");
-
                 }
 
-                //btn[row][col].setText("clicked");
+                btn[row][col].setText("clicked");
                 blank();
             }
         };
@@ -88,9 +77,11 @@ public class HelloController {
                 btn[i][j].setOnMouseClicked(z);   // same pattern as your setOnAction
             }
         }
+    }
+
         //resets the gridlines
-        gpane.setGridLinesVisible(false);
-        gpane.setGridLinesVisible(true);
+//        gpane.setGridLinesVisible(false);
+//        gpane.setGridLinesVisible(true);
     }
     public void blank(){
 
