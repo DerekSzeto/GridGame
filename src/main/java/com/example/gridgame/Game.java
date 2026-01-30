@@ -7,22 +7,20 @@ public class Game {
 
     //make 2D array of tiles to match the size of your 2D array of btns in the controller
 
-    private ArrayList<Robot> allBots = new ArrayList<>();
+    private ArrayList<Piece> piecesActive = new ArrayList<>();
 
 
-    //make robot in gameManager
-    //make robot appear on grid
 
-    private int[][] boardToMake =
+    private int[][] board =
             {       {4,4,4,4,4,4,4,4,4,4},
                     {4,0,0,0,0,0,0,0,0,4},
-                    {4,0,4,0,4,4,0,4,0,4},
-                    {4,0,4,0,4,4,0,4,0,4},
-                    {4,4,4,0,4,4,0,4,4,4},
-                    {4,0,0,0,4,4,0,4,6,4},
-                    {4,4,4,0,4,4,0,4,0,4},
-                    {4,0,4,0,4,4,0,4,0,4},
-                    {4,0,4,0,0,0,0,0,0,4},
+                    {4,0,0,0,0,0,0,0,0,4},
+                    {4,0,0,0,0,0,0,0,0,4},
+                    {4,0,0,0,0,0,0,0,0,4},
+                    {4,0,0,0,0,0,0,0,0,4},
+                    {4,0,0,0,0,0,0,0,0,4},
+                    {4,0,0,0,0,0,0,0,0,4},
+                    {4,0,0,0,0,0,0,0,0,4},
                     {4,4,4,4,4,4,4,4,4,4}
             };
 
@@ -34,7 +32,7 @@ public class Game {
 
         for (int i = 0; i < row; i++){
             for (int j = 0; j < col; j++){
-                tiles[i][j] = new Tile(boardToMake[i][j]);
+                tiles[i][j] = new Tile(board[i][j]);
             }
         }
 
@@ -61,12 +59,11 @@ public class Game {
 
 
 
-    public void makeRobots(){
-        allBots.add(new Robot(1,1));
-        allBots.add(new SmartRobot(1,8));
+    public void addStandardPiece(int r, int c){
+        piecesActive.add(new Piece(r,c));
     }
-    public ArrayList<Robot> getAllBots(){
-        return allBots;
+    public ArrayList<Piece> getPiecesActive(){
+        return piecesActive;
     }
 
 }

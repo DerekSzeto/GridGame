@@ -9,7 +9,7 @@ public class Piece {
 
     protected int numOfMoves;
 
-    public Robot(int r, int c){
+    public Piece(int r, int c){
         this.currentRow = r;
         this.currentCol = c;
     }
@@ -48,20 +48,19 @@ public class Piece {
         }
 
 
-        if  (tiles[newRow][newCol].getValue() == 0){
-            // this means I'm allowed to move, so move
-            currentCol = newCol;
-            currentRow = newRow;
-        }else if (tiles[newRow][newCol].getValue() == 6){
-            currentCol = newCol;
-            currentRow = newRow;
-            canMove = false;
-            System.out.println("STOP");
-        }
+//        if  (tiles[newRow][newCol].getValue() == 0){
+//            // this means I'm allowed to move, so move
+//            currentCol = newCol;
+//            currentRow = newRow;
+//        }else if (tiles[newRow][newCol].getValue() == 6){
+//            currentCol = newCol;
+//            currentRow = newRow;
+//            canMove = false;
+//            System.out.println("STOP");
+//        }
 
 
     }
-
 
     public boolean canMove() {
         return canMove;
