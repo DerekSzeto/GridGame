@@ -6,12 +6,12 @@ public class Piece {
 
 
     protected boolean canMove= true;
-
-    protected int numOfMoves;
+    protected String direction;
 
     public Piece(int r, int c){
         this.currentRow = r;
         this.currentCol = c;
+        this.direction = direction();
     }
 
 
@@ -22,42 +22,40 @@ public class Piece {
     public int getCurrenCol() {
         return currentCol;
     }
-
+    public String direction(){
+        if(currentCol==0){
+           return "right";
+        }else if(currentCol==11){
+            return "left";
+        }else if(currentRow==11){
+            return "up";
+        }else if(currentRow==0){
+            return "down";
+        }
+        return null;
+    }
     public void move(Tile[][] tiles){
-        //random movement
-        //random num 0-3 -> right, left, up, down
-        //move robot
-
-        numOfMoves+=1;
 
         int newRow = currentRow;
         int newCol = currentCol;
 
-        int rand = (int) (Math.random() * 4) ;
-
-        if (rand == 0) {
-            newRow =  currentRow - 1;
-        }else if (rand == 1) {
-            newRow = currentRow + 1;
-        }else if (rand == 2) {
-            newCol = currentCol - 1;
-
-        }else if (rand == 3) {
-            newCol = currentCol + 1;
-            newRow = currentRow;
+        if(direction.equals("right")){
+            newCol = currentCol+1;
+        }else if(direction.equals("left")){
+            newCol = currentCol-1;
+        }else if(direction.equals("up")){
+            newRow = currentRow+1;
+        }else if(direction.equals("down")){
+            newRow = currentRow-1;
         }
 
 
-//        if  (tiles[newRow][newCol].getValue() == 0){
-//            // this means I'm allowed to move, so move
-//            currentCol = newCol;
-//            currentRow = newRow;
-//        }else if (tiles[newRow][newCol].getValue() == 6){
-//            currentCol = newCol;
-//            currentRow = newRow;
-//            canMove = false;
-//            System.out.println("STOP");
-//        }
+        if  (tiles[newRow][newCol].getValue() == 0){
+            currentCol = newCol;
+            currentRow = newRow;
+        }else if (tiles[newRow][newCol].getValue() == 4){
+            canMove = false;
+        }
 
 
     }

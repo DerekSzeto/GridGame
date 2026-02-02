@@ -15,14 +15,13 @@ public class HelloController {
     //then inheritance
 
     public GridPane gpane;
-    public TextField userCoord;
+    public Button startButton;
     private Button[][] btn;
 
     private Game game = new Game();
-
     public void handleClick(ActionEvent actionEvent) {
-        int x = 10;
-        int y = 10;
+        int x = 12;
+        int y = 12;
         btn = new Button[x][y];
 
         game.createBoard(x, y);
@@ -52,6 +51,7 @@ public class HelloController {
                 if (event.getButton() == MouseButton.PRIMARY) {
                     System.out.println("LEFT click");
                     game.addStandardPiece(row,col);
+                    handleTimer();
                 } else if (event.getButton() == MouseButton.SECONDARY) {
                     System.out.println("RIGHT click");
                 }
@@ -81,11 +81,8 @@ public class HelloController {
                     btn[i][j].setStyle("-fx-background-color: red");
                 }  else if (game.getTiles()[i][j].getValue() == 2){
                     btn[i][j].setStyle("-fx-background-color: blue");
-                }
-                else if (game.getTiles()[i][j].getValue() == 3){
-                    btn[i][j].setStyle("-fx-background-color: yellow");
-                } else if (game.getTiles()[i][j].getValue() == 4){
-                    btn[i][j].setStyle("-fx-background-color: orange");
+                } else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 5){
+                    btn[i][j].setStyle("-fx-background-color: goldenrod");
                 }
             }
         }
@@ -99,27 +96,7 @@ public class HelloController {
 
 
     }
-
-    public void handleRedButton(ActionEvent actionEvent) {
-        game.getTiles()[0][0].setValue(1);
-        updateScreen();
-    }
-
-    public void handleYellowButton(ActionEvent actionEvent) {
-        String userInput = userCoord.getText();
-        int comma = userInput.indexOf(',');
-        int row = Integer.parseInt(userInput.substring(0,comma));
-        int col = Integer.parseInt(userInput.substring(comma+1));
-
-        game.getTiles()[row][col].setValue(3);
-        updateScreen();
-    }
-
-    public void handleMoveRight(ActionEvent actionEvent) {
-        updateScreen();
-    }
-
-    public void handleTimer(ActionEvent actionEvent) {
+    public void handleTimer() {
         new AnimationTimer(){
 
             @Override
@@ -127,10 +104,17 @@ public class HelloController {
                 for (int i = 0; i<game.getPiecesActive().size(); i++){
                     if (game.getPiecesActive().get(i).canMove()){
                         game.getPiecesActive().get(i).move(game.getTiles());
+                        System.out.println("move");
+                        System.out.println(game.getPiecesActive().get(i).getCurrentRow()+" "+game.getPiecesActive().get(i).getCurrenCol());
+
+                    }else{
+                        game.getPiecesActive().clear();
+                        System.out.println("stop");
+                        System.out.println(game.getPiecesActive().get(i).getCurrentRow()+" "+game.getPiecesActive().get(i).getCurrenCol());
                     }
+                    updateScreen();
                 }
 
-                updateScreen();
 
             }
         }.start();
