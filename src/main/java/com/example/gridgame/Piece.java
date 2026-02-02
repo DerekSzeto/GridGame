@@ -11,7 +11,7 @@ public class Piece {
     public Piece(int r, int c){
         this.currentRow = r;
         this.currentCol = c;
-        this.direction = direction();
+
     }
 
 
@@ -19,20 +19,21 @@ public class Piece {
         return currentRow;
     }
 
-    public int getCurrenCol() {
+    public int getCurrentCol() {
         return currentCol;
     }
-    public String direction(){
-        if(currentCol==0){
-           return "right";
-        }else if(currentCol==11){
-            return "left";
-        }else if(currentRow==11){
-            return "up";
-        }else if(currentRow==0){
-            return "down";
+    public void setDirection(int r, int c){
+        if(c==0){
+
+            direction=  "right";
+        }else if(c==11){
+            direction=  "left";
+        }else if(r==11){
+            direction=  "up";
+        }else if(r==0){
+            direction=  "down";
         }
-        return null;
+
     }
     public void move(Tile[][] tiles){
 
@@ -44,16 +45,16 @@ public class Piece {
         }else if(direction.equals("left")){
             newCol = currentCol-1;
         }else if(direction.equals("up")){
-            newRow = currentRow+1;
-        }else if(direction.equals("down")){
             newRow = currentRow-1;
+        }else if(direction.equals("down")){
+            newRow = currentRow+1;
         }
 
 
-        if  (tiles[newRow][newCol].getValue() == 0){
+        if  (tiles[newRow][newCol].getValue() == 0&!tiles[newRow][newCol].isTaken()){
             currentCol = newCol;
             currentRow = newRow;
-        }else if (tiles[newRow][newCol].getValue() == 4){
+        }else if (tiles[newRow][newCol].getValue() == 4|tiles[newRow][newCol].isTaken()){
             canMove = false;
         }
 

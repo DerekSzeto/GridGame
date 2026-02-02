@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -56,7 +55,6 @@ public class HelloController {
                     System.out.println("RIGHT click");
                 }
 
-                btn[row][col].setText("clicked");
                 updateScreen();
             }
         };
@@ -75,7 +73,7 @@ public class HelloController {
 
         for (int i=0; i< btn.length;i++){
             for (int j=0; j< btn[0].length;j++){
-                if (game.getTiles()[i][j].getValue() == 0){
+                if (game.getTiles()[i][j].getValue() == 0&!game.getTiles()[i][j].isTaken()){
                     btn[i][j].setStyle("-fx-background-color: white");
                 }  else if (game.getTiles()[i][j].getValue() == 1){
                     btn[i][j].setStyle("-fx-background-color: red");
@@ -87,10 +85,14 @@ public class HelloController {
             }
         }
 
-//        btn[game.getAllBots().getCurrentRow()][game.getBot().getCurrenCol()].setStyle("-fx-background-color: #1aff00");
+//        btn[game.getAllBots().getCurrentRow()][game.getBot().getCurrentCol()].setStyle("-fx-background-color: #1aff00");
 
         for (Piece x: game.getPiecesActive()){
-            btn[x.getCurrentRow()][x.getCurrenCol()].setStyle("-fx-background-color: #22ff00");
+            if(game.getPlayerTurn()==1) {
+                btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #cd0be3");
+            }else{
+                btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #41e30b");
+            }
         }
 
 
@@ -105,12 +107,13 @@ public class HelloController {
                     if (game.getPiecesActive().get(i).canMove()){
                         game.getPiecesActive().get(i).move(game.getTiles());
                         System.out.println("move");
-                        System.out.println(game.getPiecesActive().get(i).getCurrentRow()+" "+game.getPiecesActive().get(i).getCurrenCol());
+                        System.out.println(game.getPiecesActive().get(i).getCurrentRow()+" "+game.getPiecesActive().get(i).getCurrentCol());
 
                     }else{
-                        game.getPiecesActive().clear();
-                        System.out.println("stop");
-                        System.out.println(game.getPiecesActive().get(i).getCurrentRow()+" "+game.getPiecesActive().get(i).getCurrenCol());
+                        game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].setTileTaken(true);
+                        game.getPiecesActive().remove(i);
+                        game.switchPlayer();
+                        stop();
                     }
                     updateScreen();
                 }

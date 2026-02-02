@@ -49,7 +49,7 @@ public class Game {
     public void addStandardPiece(int r, int c){
         if(tiles[r][c].getValue()==4) {
             piecesActive.add(new Piece(r, c));
-
+            piecesActive.getFirst().setDirection(r,c);
         }
     }
     public ArrayList<Piece> getPiecesActive(){
@@ -57,6 +57,13 @@ public class Game {
     }
     public int getPlayerTurn() {
         return playerTurn;
+    }
+    public void switchPlayer(){
+        if(playerTurn==1){
+            playerTurn=2;
+        }else{
+            playerTurn = 1;
+        }
     }
 
 }
