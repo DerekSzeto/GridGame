@@ -65,5 +65,44 @@ public class Game {
             playerTurn = 1;
         }
     }
-
+    public void checkGameOver(int r, int c,int player){
+        boolean[] fiveTiles = {true, false,false,false,false};
+        String[] patterns = {"row","column"};
+        boolean doneChecking = false;
+        while(!doneChecking) {
+            for (int i = 0; i < patterns.length; i++) {
+                for (int j = 0; j < 5; j++) {
+                    if(patterns[i].equals("row")) {
+                        if (tiles[r][c + j].getValue() == player) {
+                            fiveTiles[j] = true;
+                        } else {
+                            for (int j = 1; j < fiveTiles.length; j++) {
+                                fiveTiles[j] = false;
+                            }
+                        }
+                    }else{
+                        if (tiles[r+j][c].getValue() == player) {
+                            fiveTiles[j] = true;
+                        } else {
+                            for (int j = 1; j < fiveTiles.length; j++) {
+                                fiveTiles[j] = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public boolean patternOf5(boolean[] fiveTiles){
+        int count = 0;
+        for (int j = 1; j < fiveTiles.length; j++) {
+            if(fiveTiles[j]){
+                count++;
+            };
+        }
+        if(count == 5){
+            return true;
+        }
+        return false;
+    }
 }

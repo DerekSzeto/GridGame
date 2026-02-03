@@ -51,10 +51,10 @@ public class Piece {
         }
 
 
-        if  (tiles[newRow][newCol].getValue() == 0&!tiles[newRow][newCol].isTaken()){
+        if  (tiles[newRow][newCol].getValue() == 0){
             currentCol = newCol;
             currentRow = newRow;
-        }else if (tiles[newRow][newCol].getValue() == 4|tiles[newRow][newCol].isTaken()){
+        }else if (tiles[newRow][newCol].getValue() > 0){
             canMove = false;
         }
 

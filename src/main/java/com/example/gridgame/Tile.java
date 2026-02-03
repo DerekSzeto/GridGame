@@ -1,21 +1,11 @@
 package com.example.gridgame;
 
 public class Tile {
+    //4 is a border, 0 is free,  1 is p1 and 2 is p2
     private int tileValue;
-    private boolean taken;
     public Tile(int value) {
         tileValue = value;
-        if(this.tileValue==4){
-            taken = true;
-        }else{
-            taken = false;
-        }
-    }
-    public boolean isTaken(){
-        return taken;
-    }
-    public void setTileTaken(boolean b){
-        taken = b;
+
     }
     public int getValue() {
         return tileValue;

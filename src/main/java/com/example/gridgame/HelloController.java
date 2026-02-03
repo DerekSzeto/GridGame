@@ -73,14 +73,10 @@ public class HelloController {
 
         for (int i=0; i< btn.length;i++){
             for (int j=0; j< btn[0].length;j++){
-                if (game.getTiles()[i][j].getValue() == 0&!game.getTiles()[i][j].isTaken()){
+                if (game.getTiles()[i][j].getValue() == 0){
                     btn[i][j].setStyle("-fx-background-color: white");
-                }  else if (game.getTiles()[i][j].getValue() == 1){
-                    btn[i][j].setStyle("-fx-background-color: red");
-                }  else if (game.getTiles()[i][j].getValue() == 2){
-                    btn[i][j].setStyle("-fx-background-color: blue");
                 } else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 5){
-                    btn[i][j].setStyle("-fx-background-color: goldenrod");
+                    btn[i][j].setStyle("-fx-background-color: navy");
                 }
             }
         }
@@ -95,6 +91,13 @@ public class HelloController {
             }
         }
 
+        for (int i = 1; i < 3; i++) {
+            for (int j = 0; j < game.getTiles().length; j++) {
+                for (int k = 0; k < game.getTiles()[i].length; k++) {
+                    game.checkGameOver(j,k,i);
+                }
+            }
+        }
 
 
     }
@@ -110,7 +113,7 @@ public class HelloController {
                         System.out.println(game.getPiecesActive().get(i).getCurrentRow()+" "+game.getPiecesActive().get(i).getCurrentCol());
 
                     }else{
-                        game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].setTileTaken(true);
+                        game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].setValue(game.getPlayerTurn());
                         game.getPiecesActive().remove(i);
                         game.switchPlayer();
                         stop();
