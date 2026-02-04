@@ -65,53 +65,38 @@ public class Game {
             playerTurn = 1;
         }
     }
-    public boolean checkGameOver(int r, int c,int player){
+    public boolean checkGameOver(int player){
 
-        boolean[] fiveTiles = {false, false,false,false,false};
-        for (int i = 0; i < fiveTiles.length; i++) {
-            if (tiles[r][c + i].getValue() == player) {
-                fiveTiles[i] = true;
-            }else{
-                resetArray(fiveTiles);
-                break;
-            }
-        }
-
-        if(checkPattern5(fiveTiles)){
-            System.out.println("win by row");
-            return true;
-        }else{
-            for (int i = 0; i < fiveTiles.length; i++) {
-                if (tiles[r+1][c].getValue() == player) {
-                    fiveTiles[i] = true;
-                }else{
-                    resetArray(fiveTiles);
+        for (int i = 1; i < tiles.length-1; i++) {
+            int rowCount = 0;
+            for (int j = 0; j < tiles[i].length; j++) {
+                if (tiles[i][j].getValue() == player) {
+                    rowCount++;
+                } else {
+                    rowCount = 0;
+                }
+                if(rowCount==5){
+                    System.out.println("win by row");
+                    return true;
                 }
             }
-            if(checkPattern5(fiveTiles)){
-                System.out.println("win by col");
-                return true;
+        }
+
+        for (int i = 1; i < tiles[i].length-1; i++) {
+            int colCount = 0;
+            for (int j = 1; j < tiles.length-1; j++) {
+                if (tiles[j][i].getValue() == player) {
+                    colCount++;
+                } else {
+                    colCount = 0;
+                }
+                if(colCount==5){
+                    System.out.println("win by col");
+                    return true;
+                }
             }
         }
 
         return false;
-    }
-    public boolean checkPattern5(boolean[] fiveTiles){
-        int count = 0;
-        for (int j = 0; j < fiveTiles.length; j++) {
-            if(fiveTiles[j]){
-                count++;
-            };
-        }
-        if(count == 5){
-            return true;
-        }
-        return false;
-    }
-    public boolean[] resetArray(boolean[] fiveTiles){
-        for (int i = 0; i < fiveTiles.length; i++) {
-            fiveTiles[i] = false;
-        }
-        return fiveTiles;
     }
 }

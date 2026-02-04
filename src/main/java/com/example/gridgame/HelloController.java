@@ -19,6 +19,7 @@ public class HelloController {
     public Button startButton;
     public TextField dimensionsTextField;
     public Label winnerLabel;
+    public Label playerTurnLabel;
     private Button[][] btn;
 
     private Game game = new Game();
@@ -92,18 +93,15 @@ public class HelloController {
                 btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #41e30b");
             }
         }
+        playerTurnLabel.setText("Player Turn: "+ game.getPlayerTurn());
         checkGameOver();
     }
     public void checkGameOver(){
         for (int i = 1; i < 3; i++) {
-            for (int j = 1; j < game.getTiles().length-2; j++) {
-                for (int k = 1; k < game.getTiles()[i].length-2; k++) {
-                    if(game.checkGameOver(j,k,i)){
-                        winnerLabel.setText("Player "+ i + " wins");
-                    };
-
-                }
-            }
+           if(game.checkGameOver(i)){
+               winnerLabel.setText("Player "+ i + " won");
+               break;
+           };
         }
     }
     public void handleTimer() {
