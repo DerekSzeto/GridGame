@@ -65,37 +65,40 @@ public class Game {
             playerTurn = 1;
         }
     }
-    public void checkGameOver(int r, int c,int player){
-        boolean[] fiveTiles = {true, false,false,false,false};
-        String[] patterns = {"row","column"};
-        boolean doneChecking = false;
-        while(!doneChecking) {
-            for (int i = 0; i < patterns.length; i++) {
-                for (int j = 0; j < 5; j++) {
-                    if(patterns[i].equals("row")) {
-                        if (tiles[r][c + j].getValue() == player) {
-                            fiveTiles[j] = true;
-                        } else {
-                            for (int j = 1; j < fiveTiles.length; j++) {
-                                fiveTiles[j] = false;
-                            }
-                        }
-                    }else{
-                        if (tiles[r+j][c].getValue() == player) {
-                            fiveTiles[j] = true;
-                        } else {
-                            for (int j = 1; j < fiveTiles.length; j++) {
-                                fiveTiles[j] = false;
-                            }
-                        }
-                    }
-                }
+    public boolean checkGameOver(int r, int c,int player){
+
+        boolean[] fiveTiles = {false, false,false,false,false};
+        for (int i = 0; i < fiveTiles.length; i++) {
+            if (tiles[r][c + i].getValue() == player) {
+                fiveTiles[i] = true;
+            }else{
+                resetArray(fiveTiles);
+                break;
             }
         }
+
+        if(checkPattern5(fiveTiles)){
+            System.out.println("win by row");
+            return true;
+        }else{
+            for (int i = 0; i < fiveTiles.length; i++) {
+                if (tiles[r+1][c].getValue() == player) {
+                    fiveTiles[i] = true;
+                }else{
+                    resetArray(fiveTiles);
+                }
+            }
+            if(checkPattern5(fiveTiles)){
+                System.out.println("win by col");
+                return true;
+            }
+        }
+
+        return false;
     }
-    public boolean patternOf5(boolean[] fiveTiles){
+    public boolean checkPattern5(boolean[] fiveTiles){
         int count = 0;
-        for (int j = 1; j < fiveTiles.length; j++) {
+        for (int j = 0; j < fiveTiles.length; j++) {
             if(fiveTiles[j]){
                 count++;
             };
@@ -104,5 +107,11 @@ public class Game {
             return true;
         }
         return false;
+    }
+    public boolean[] resetArray(boolean[] fiveTiles){
+        for (int i = 0; i < fiveTiles.length; i++) {
+            fiveTiles[i] = false;
+        }
+        return fiveTiles;
     }
 }

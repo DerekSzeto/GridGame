@@ -4,6 +4,8 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -15,15 +17,18 @@ public class HelloController {
 
     public GridPane gpane;
     public Button startButton;
+    public TextField dimensionsTextField;
+    public Label winnerLabel;
     private Button[][] btn;
 
     private Game game = new Game();
     public void handleClick(ActionEvent actionEvent) {
-        int x = 12;
-        int y = 12;
+        int x = Integer.parseInt(dimensionsTextField.getText().substring(0,dimensionsTextField.getText().indexOf(",")));
+        int y = Integer.parseInt(dimensionsTextField.getText().substring(dimensionsTextField.getText().indexOf(",")+1));
         btn = new Button[x][y];
 
         game.createBoard(x, y);
+        handleTimer();
         gpane.getChildren().clear();
         gpane.setGridLinesVisible(true);
         for (int i = 0; i < btn.length; i++) {
@@ -50,7 +55,6 @@ public class HelloController {
                 if (event.getButton() == MouseButton.PRIMARY) {
                     System.out.println("LEFT click");
                     game.addStandardPiece(row,col);
-                    handleTimer();
                 } else if (event.getButton() == MouseButton.SECONDARY) {
                     System.out.println("RIGHT click");
                 }
@@ -81,8 +85,6 @@ public class HelloController {
             }
         }
 
-//        btn[game.getAllBots().getCurrentRow()][game.getBot().getCurrentCol()].setStyle("-fx-background-color: #1aff00");
-
         for (Piece x: game.getPiecesActive()){
             if(game.getPlayerTurn()==1) {
                 btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #cd0be3");
@@ -90,16 +92,19 @@ public class HelloController {
                 btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #41e30b");
             }
         }
-
+        checkGameOver();
+    }
+    public void checkGameOver(){
         for (int i = 1; i < 3; i++) {
-            for (int j = 0; j < game.getTiles().length; j++) {
-                for (int k = 0; k < game.getTiles()[i].length; k++) {
-                    game.checkGameOver(j,k,i);
+            for (int j = 1; j < game.getTiles().length-2; j++) {
+                for (int k = 1; k < game.getTiles()[i].length-2; k++) {
+                    if(game.checkGameOver(j,k,i)){
+                        winnerLabel.setText("Player "+ i + " wins");
+                    };
+
                 }
             }
         }
-
-
     }
     public void handleTimer() {
         new AnimationTimer(){
@@ -109,14 +114,13 @@ public class HelloController {
                 for (int i = 0; i<game.getPiecesActive().size(); i++){
                     if (game.getPiecesActive().get(i).canMove()){
                         game.getPiecesActive().get(i).move(game.getTiles());
-                        System.out.println("move");
-                        System.out.println(game.getPiecesActive().get(i).getCurrentRow()+" "+game.getPiecesActive().get(i).getCurrentCol());
 
                     }else{
                         game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].setValue(game.getPlayerTurn());
+                        System.out.println(game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].getValue());
                         game.getPiecesActive().remove(i);
                         game.switchPlayer();
-                        stop();
+
                     }
                     updateScreen();
                 }
