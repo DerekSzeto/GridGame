@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -20,9 +21,16 @@ public class HelloController {
     public TextField dimensionsTextField;
     public Label winnerLabel;
     public Label playerTurnLabel;
+    public ListView player1PiecesListView;
+    public Label pieceSelectedLabel;
     private Button[][] btn;
+    public void initialize(){
+        player1PiecesListView.getItems().add("Standard Piece");
+        player1PiecesListView.getItems().add("Bomb");
 
+    }
     private Game game = new Game();
+    private Player player1 = new Player("boi");
     public void handleClick(ActionEvent actionEvent) {
         int x = Integer.parseInt(dimensionsTextField.getText().substring(0,dimensionsTextField.getText().indexOf(",")));
         int y = Integer.parseInt(dimensionsTextField.getText().substring(dimensionsTextField.getText().indexOf(",")+1));
@@ -53,11 +61,10 @@ public class HelloController {
                 int col = GridPane.getColumnIndex(clicked);
                 System.out.println("(" + row + "," + col + ")");
 
-                if (event.getButton() == MouseButton.PRIMARY) {
-                    System.out.println("LEFT click");
+                if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) {
                     game.addStandardPiece(row,col);
                 } else if (event.getButton() == MouseButton.SECONDARY) {
-                    System.out.println("RIGHT click");
+
                 }
 
                 updateScreen();
@@ -109,24 +116,39 @@ public class HelloController {
 
             @Override
             public void handle(long l) {
-                for (int i = 0; i<game.getPiecesActive().size(); i++){
-                    if (game.getPiecesActive().get(i).canMove()){
-                        game.getPiecesActive().get(i).move(game.getTiles());
+                if(!game.isGameOver()){
+                    for (int i = 0; i < game.getPiecesActive().size(); i++) {
+                        if (game.getPiecesActive().get(i).canMove()) {
+                            game.getPiecesActive().get(i).move(game.getTiles());
 
-                    }else{
-                        game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].setValue(game.getPlayerTurn());
-                        System.out.println(game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].getValue());
-                        game.getPiecesActive().remove(i);
-                        game.switchPlayer();
+                        } else {
+                            if (game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].getValue() == 0) {
+                                game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].setValue(game.getPlayerTurn());
+                            }
+                            if (game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].getValue() < 4) {
+                                game.switchPlayer();
+                            } else {
+                                System.out.println("cannot shoot");
+                            }
+                            game.getPiecesActive().remove(i);
 
+
+                        }
+                        updateScreen();
                     }
-                    updateScreen();
                 }
-
-
             }
         }.start();
 
     }
 
+    public void selectPiece(MouseEvent mouseEvent) {
+        if(player1PiecesListView.getSelectionModel().getSelectedIndex()==0){
+            pieceSelectedLabel.setText("Standard Piece");
+        }else if(player1PiecesListView.getSelectionModel().getSelectedIndex()==1){
+            pieceSelectedLabel.setText("Bomb");
+        }
+        player1.setSelectedPiece(player1PiecesListView.getSelectionModel().getSelectedIndex());
+
+    }
 }

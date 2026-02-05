@@ -6,7 +6,7 @@ public class Game {
     private Tile[][] tiles;
     private int playerTurn = (int)(Math.random()*2+1);
     private ArrayList<Piece> piecesActive = new ArrayList<>();
-
+    private boolean gameOver = false;
 
 
     private int[][] board =
@@ -76,7 +76,7 @@ public class Game {
                     rowCount = 0;
                 }
                 if(rowCount==5){
-                    System.out.println("win by row");
+                    gameOver = true;
                     return true;
                 }
             }
@@ -91,12 +91,18 @@ public class Game {
                     colCount = 0;
                 }
                 if(colCount==5){
-                    System.out.println("win by col");
+                    gameOver = true;
                     return true;
                 }
             }
         }
 
         return false;
+    }
+    public boolean isGameOver(){
+        return this.gameOver;
+    }
+    public void setGameOver(boolean b){
+        gameOver = b;
     }
 }
