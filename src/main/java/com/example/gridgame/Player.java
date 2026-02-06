@@ -1,8 +1,11 @@
 package com.example.gridgame;
 
+import java.util.ArrayList;
+
 public class Player {
-    private boolean[] availablePieces = {true,true};
+//    private boolean[] availablePieces = {true,true};
     private boolean[] selectedPiece = {true,false};
+    private ArrayList<Bomb> bombs = new ArrayList<>();
     private String name;
     public Player(String name){
 
@@ -22,5 +25,10 @@ public class Player {
                 return i;
             }
         }
+        return 0;
     }
+    public ArrayList<Bomb> getPlayerBombs(){
+        return bombs;
+    }
+
 }

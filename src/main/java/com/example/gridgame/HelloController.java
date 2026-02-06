@@ -21,16 +21,23 @@ public class HelloController {
     public TextField dimensionsTextField;
     public Label winnerLabel;
     public Label playerTurnLabel;
-    public ListView player1PiecesListView;
+    public ListView playerPiecesListView;
     public Label pieceSelectedLabel;
+    public ListView playerClickableListView;
+    public Label clickableSelectedLabel;
     private Button[][] btn;
     public void initialize(){
-        player1PiecesListView.getItems().add("Standard Piece");
-        player1PiecesListView.getItems().add("Bomb");
+        playerPiecesListView.getItems().add("Standard Piece");
 
+
+        game.addPlayers();
+        game.getPlayers()[0].getPlayerBombs().add(new Bomb(1));
+        for (int i = 0; i < game.getPlayers()[0].getPlayerBombs().size(); i++) {
+            playerClickableListView.getItems().add("Bomb");
+        }
     }
     private Game game = new Game();
-    private Player player1 = new Player("boi");
+
     public void handleClick(ActionEvent actionEvent) {
         int x = Integer.parseInt(dimensionsTextField.getText().substring(0,dimensionsTextField.getText().indexOf(",")));
         int y = Integer.parseInt(dimensionsTextField.getText().substring(dimensionsTextField.getText().indexOf(",")+1));
@@ -59,12 +66,17 @@ public class HelloController {
                 Button clicked = (Button) event.getSource();
                 int row = GridPane.getRowIndex(clicked);
                 int col = GridPane.getColumnIndex(clicked);
-                System.out.println("(" + row + "," + col + ")");
+                System.out.println("(" + row + "," + col + ")" + " Value: "+ game.getTiles()[row][col].getValue());
 
-                if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) {
-                    game.addStandardPiece(row,col);
-                } else if (event.getButton() == MouseButton.SECONDARY) {
-
+                if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) { //shoot
+                    if(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece()==0) {
+                        game.shootStandardPiece(row, col);
+                    }
+                } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
+                    if(game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size()>=1){
+                        game.useBomb(game.getPlayerTurn()-1, row, col);
+                        System.out.println("used bomb");
+                    }
                 }
 
                 updateScreen();
@@ -100,8 +112,18 @@ public class HelloController {
                 btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #41e30b");
             }
         }
+
+        updatePlayerListViews();
+
         playerTurnLabel.setText("Player Turn: "+ game.getPlayerTurn());
         checkGameOver();
+    }
+    public void updatePlayerListViews(){
+        playerClickableListView.getItems().clear();
+
+        for (int i = 0; i < game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size(); i++) {
+            playerClickableListView.getItems().add("Bomb");
+        }
     }
     public void checkGameOver(){
         for (int i = 1; i < 3; i++) {
@@ -143,12 +165,10 @@ public class HelloController {
     }
 
     public void selectPiece(MouseEvent mouseEvent) {
-        if(player1PiecesListView.getSelectionModel().getSelectedIndex()==0){
+        if(playerPiecesListView.getSelectionModel().getSelectedIndex()==0){
             pieceSelectedLabel.setText("Standard Piece");
-        }else if(player1PiecesListView.getSelectionModel().getSelectedIndex()==1){
-            pieceSelectedLabel.setText("Bomb");
         }
-        player1.setSelectedPiece(player1PiecesListView.getSelectionModel().getSelectedIndex());
+        game.getPlayers()[game.getPlayerTurn()-1].setSelectedPiece(playerPiecesListView.getSelectionModel().getSelectedIndex());
 
     }
 }

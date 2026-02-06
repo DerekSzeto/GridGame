@@ -6,8 +6,19 @@ public class Game {
     private Tile[][] tiles;
     private int playerTurn = (int)(Math.random()*2+1);
     private ArrayList<Piece> piecesActive = new ArrayList<>();
+    private Player player1 = new Player("boi1");
+    private Player player2 = new Player("boi2");
+    private Player[] players = new Player[2];
+
     private boolean gameOver = false;
 
+    public void addPlayers(){
+        players[0] = player1;
+        players[1] = player2;
+    }
+    public Player[] getPlayers(){
+        return players;
+    }
 
     private int[][] board =
             {       {5,4,4,4,4,4,4,4,4,4,4,5},
@@ -46,7 +57,7 @@ public class Game {
 
 
 
-    public void addStandardPiece(int r, int c){
+    public void shootStandardPiece(int r, int c){
         if(tiles[r][c].getValue()==4) {
             piecesActive.add(new Piece(r, c));
             piecesActive.getFirst().setDirection(r,c);
@@ -104,5 +115,10 @@ public class Game {
     }
     public void setGameOver(boolean b){
         gameOver = b;
+    }
+
+    public void useBomb(int player, int r, int c) {
+        players[player].getPlayerBombs().getFirst().explode(r,c,tiles);
+        switchPlayer();
     }
 }
