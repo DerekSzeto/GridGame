@@ -69,9 +69,9 @@ public class HelloController {
                 System.out.println("(" + row + "," + col + ")" + " Value: "+ game.getTiles()[row][col].getValue());
 
                 if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) { //shoot
-                    if(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece()==0) {
-                        game.shootStandardPiece(row, col);
-                    }
+//                    if(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece().equals("Standard")) {
+//                        game.shootPiece(row, col, playerPiecesListView.getSelectionModel().getSelectedItem().toString());
+//                    }
                 } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
                     if(game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size()>=1){
                         game.useBomb(game.getPlayerTurn()-1, row, col);

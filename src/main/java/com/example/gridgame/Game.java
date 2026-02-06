@@ -57,7 +57,7 @@ public class Game {
 
 
 
-    public void shootStandardPiece(int r, int c){
+    public void shootPiece(int r, int c, String type){
         if(tiles[r][c].getValue()==4) {
             piecesActive.add(new Piece(r, c));
             piecesActive.getFirst().setDirection(r,c);
@@ -121,4 +121,5 @@ public class Game {
         players[player].getPlayerBombs().getFirst().explode(r,c,tiles);
         switchPlayer();
     }
+
 }
