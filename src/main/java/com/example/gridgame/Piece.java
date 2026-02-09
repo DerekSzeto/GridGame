@@ -11,7 +11,6 @@ public class Piece {
     public Piece(int r, int c){
         this.currentRow = r;
         this.currentCol = c;
-
     }
 
 
@@ -24,7 +23,6 @@ public class Piece {
     }
     public void setDirection(int r, int c){
         if(c==0){
-
             direction=  "right";
         }else if(c==11){
             direction=  "left";

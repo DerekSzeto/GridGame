@@ -10,15 +10,20 @@ public class Player {
     public Player(String name){
         this.name = name;
         pieces.add("Standard");
+        pieces.add("Paint");
     }
     public void setSelectedPiece(int piece){
         selectedPiece = pieces.get(piece);
+
     }
     public String getSelectedPiece(){
         return selectedPiece;
     }
     public ArrayList<Bomb> getPlayerBombs(){
         return bombs;
+    }
+    public ArrayList<String> getPieces(){
+        return pieces;
     }
 
 }

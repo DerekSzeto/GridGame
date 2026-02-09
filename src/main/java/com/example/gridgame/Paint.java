@@ -1,14 +1,18 @@
 package com.example.gridgame;
 
 public class Paint extends Piece {
+    private int radius;
     public Paint(int r, int c){
         super(r,c);
+        this.radius = r;
     }
-    public void paintTiles(Tile[][] tiles, int r, int c){
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
+    public void paintTiles(Tile[][] tiles, int r, int c, int value){
+        int leftBound = -1 * radius;
+        int rightBound = 1 + radius;
+        for (int i = leftBound; i < rightBound; i++) {
+            for (int j = leftBound; j < rightBound; j++) {
                 if ((r + i) > 0 && (r + i) < tiles.length-1 && (c + j) > 0 && (c + j) < tiles[r + i].length-1) {
-                    tiles[r+i][c+j].setValue(0);
+                    tiles[r+i][c+j].setValue(value);
                 }
             }
         }

@@ -27,14 +27,9 @@ public class HelloController {
     public Label clickableSelectedLabel;
     private Button[][] btn;
     public void initialize(){
-        playerPiecesListView.getItems().add("Standard Piece");
-
-
         game.addPlayers();
         game.getPlayers()[0].getPlayerBombs().add(new Bomb(1));
-        for (int i = 0; i < game.getPlayers()[0].getPlayerBombs().size(); i++) {
-            playerClickableListView.getItems().add("Bomb");
-        }
+        game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
     }
     private Game game = new Game();
 
@@ -69,9 +64,7 @@ public class HelloController {
                 System.out.println("(" + row + "," + col + ")" + " Value: "+ game.getTiles()[row][col].getValue());
 
                 if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) { //shoot
-//                    if(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece().equals("Standard")) {
-//                        game.shootPiece(row, col, playerPiecesListView.getSelectionModel().getSelectedItem().toString());
-//                    }
+                    game.shootPiece(row, col, game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece());
                 } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
                     if(game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size()>=1){
                         game.useBomb(game.getPlayerTurn()-1, row, col);
@@ -119,11 +112,16 @@ public class HelloController {
         checkGameOver();
     }
     public void updatePlayerListViews(){
+        playerPiecesListView.getItems().clear();
         playerClickableListView.getItems().clear();
 
-        for (int i = 0; i < game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size(); i++) {
-            playerClickableListView.getItems().add("Bomb");
+        for (int j = 0; j < game.getPlayers()[game.getPlayerTurn()-1].getPieces().size(); j++) {
+            playerPiecesListView.getItems().add(game.getPlayers()[game.getPlayerTurn()-1].getPieces().get(j));
         }
+        for (int i = 0; i < game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size(); i++) {
+            playerClickableListView.getItems().add("Bomb: "+game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().get(i).getRadius());
+        }
+
     }
     public void checkGameOver(){
         for (int i = 1; i < 3; i++) {

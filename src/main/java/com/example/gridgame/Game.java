@@ -59,7 +59,12 @@ public class Game {
 
     public void shootPiece(int r, int c, String type){
         if(tiles[r][c].getValue()==4) {
-            piecesActive.add(new Piece(r, c));
+            if(type.equals("Standard")) {
+                piecesActive.add(new Piece(r, c));
+            }
+            else if(type.equals("Paint")) {
+                piecesActive.add(new Paint(r, c));
+            }
             piecesActive.getFirst().setDirection(r,c);
         }
     }
@@ -119,6 +124,7 @@ public class Game {
 
     public void useBomb(int player, int r, int c) {
         players[player].getPlayerBombs().getFirst().explode(r,c,tiles);
+        players[player].getPlayerBombs().removeFirst();
         switchPlayer();
     }
 
