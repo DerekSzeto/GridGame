@@ -63,7 +63,8 @@ public class Game {
                 piecesActive.add(new Piece(r, c));
             }
             else if(type.equals("Paint")) {
-                piecesActive.add(new Paint(r, c));
+                System.out.println("paint");
+                piecesActive.add(new Paint(r, c,1));
             }
             piecesActive.getFirst().setDirection(r,c);
         }
@@ -128,4 +129,16 @@ public class Game {
         switchPlayer();
     }
 
+    public void stopPiece(int piece) {
+        if( piecesActive.get(piece) instanceof Paint){
+            ((Paint) piecesActive.get(piece)).paintTiles(tiles,piecesActive.get(piece).getCurrentRow(),piecesActive.get(piece).getCurrentCol(),playerTurn);
+        }
+        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0) {
+            tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(playerTurn);
+        }
+        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() < 4) {
+            switchPlayer();
+        }
+
+    }
 }

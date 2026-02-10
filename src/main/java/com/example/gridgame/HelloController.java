@@ -109,6 +109,12 @@ public class HelloController {
         updatePlayerListViews();
 
         playerTurnLabel.setText("Player Turn: "+ game.getPlayerTurn());
+        if(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece().equals(null)){
+            pieceSelectedLabel.setText("Select a Piece");
+        }else {
+            pieceSelectedLabel.setText(game.getPlayers()[game.getPlayerTurn() - 1].getSelectedPiece() + " is selected");
+        }
+
         checkGameOver();
     }
     public void updatePlayerListViews(){
@@ -142,17 +148,8 @@ public class HelloController {
                             game.getPiecesActive().get(i).move(game.getTiles());
 
                         } else {
-                            if (game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].getValue() == 0) {
-                                game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].setValue(game.getPlayerTurn());
-                            }
-                            if (game.getTiles()[game.getPiecesActive().get(i).getCurrentRow()][game.getPiecesActive().get(i).getCurrentCol()].getValue() < 4) {
-                                game.switchPlayer();
-                            } else {
-                                System.out.println("cannot shoot");
-                            }
-                            game.getPiecesActive().remove(i);
-
-
+                            game.stopPiece(i);
+                            game.getPiecesActive().remove(i); //fix this
                         }
                         updateScreen();
                     }
@@ -164,9 +161,10 @@ public class HelloController {
 
     public void selectPiece(MouseEvent mouseEvent) {
         if(playerPiecesListView.getSelectionModel().getSelectedIndex()==0){
-            pieceSelectedLabel.setText("Standard Piece");
+
         }
         game.getPlayers()[game.getPlayerTurn()-1].setSelectedPiece(playerPiecesListView.getSelectionModel().getSelectedIndex());
+        updateScreen();
 
     }
 }
