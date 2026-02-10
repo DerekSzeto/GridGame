@@ -139,6 +139,7 @@ public class Game {
         if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() < 4) {
             switchPlayer();
         }
+        piecesActive.remove(piece);
 
     }
 }

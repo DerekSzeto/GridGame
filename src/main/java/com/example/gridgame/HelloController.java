@@ -87,24 +87,31 @@ public class HelloController {
 //        gpane.setGridLinesVisible(false);
 //        gpane.setGridLinesVisible(true);
     public void updateScreen(){
-
+        //updates all tiles
         for (int i=0; i< btn.length;i++){
             for (int j=0; j< btn[0].length;j++){
                 if (game.getTiles()[i][j].getValue() == 0){
                     btn[i][j].setStyle("-fx-background-color: white");
                 } else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 5){
                     btn[i][j].setStyle("-fx-background-color: navy");
+                }else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 2){
+                    btn[i][j].setStyle("-fx-background-color: lime");
+                }
+                else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 1){
+                    btn[i][j].setStyle("-fx-background-color: magenta");
                 }
             }
         }
 
-        for (Piece x: game.getPiecesActive()){
-            if(game.getPlayerTurn()==1) {
+        //does the motion
+        for (Piece x : game.getPiecesActive()) {
+            if (game.getPlayerTurn() == 1) {
                 btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #cd0be3");
-            }else{
-                btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #41e30b");
+            } else {
+                btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #33a109");
             }
         }
+
 
         updatePlayerListViews();
 
@@ -149,7 +156,6 @@ public class HelloController {
 
                         } else {
                             game.stopPiece(i);
-                            game.getPiecesActive().remove(i); //fix this
                         }
                         updateScreen();
                     }
