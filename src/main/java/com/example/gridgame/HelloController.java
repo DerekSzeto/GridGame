@@ -139,10 +139,7 @@ public class HelloController {
     }
     public void checkGameOver(){
         for (int i = 1; i < 3; i++) {
-           if(game.checkGameOver(i)){
-               winnerLabel.setText("Player "+ i + " won");
-               break;
-           };
+            winnerLabel.setText(game.checkGameOver(i));
         }
     }
     public void handleTimer() {

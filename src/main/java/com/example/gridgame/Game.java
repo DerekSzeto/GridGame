@@ -72,6 +72,8 @@ public class Game {
             }
             else if(type.equals("Paint")) {
                 piecesActive.add(new Paint(r, c,1));
+            }else if(type.equals("Shadow")) {
+                piecesActive.add(new Shadow(r,c));
             }
             piecesActive.getFirst().setDirection(r,c,tiles);
         }
@@ -89,13 +91,16 @@ public class Game {
             playerTurn = 1;
         }
     }
-    public boolean checkGameOver(int player){
+    public String checkGameOver(int player){
         if(patternOf5(player)){
-            return true;
+            return "Player "+ player + " wins";
+        }else if(shootersLocked()){
+            return mostAreaCovered();
         }
-        return false;
+        return null;
     }
     public boolean shootersLocked(){
+        //not tested yet
         int[] directionCount = new int[4];
         int rows = tiles.length-2;
         int cols = tiles[0].length-2;
@@ -124,27 +129,33 @@ public class Game {
                 directionCount[2]++;
             }
         }
-        int lockCount = 0;
+        if(directionCount[0]==rows&directionCount[1]==rows&directionCount[2]==cols&directionCount[3]==cols){
+            System.out.println("check shoot");
+            return true;
+        }
+        return false;
         //check the counts of the stuff and if it matches the row and col count tmr, if all are locked return true
     }
-    public boolean mostAreaCovered(int player){
+    public String mostAreaCovered(){
         //check if the borders can shoot, once cant shoot game is over, checks who has painted the most
 
         int purpleCount = 0;
         int greenCount = 0;
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j <tiles[i].length; j++) {
-                if(player==1){
+        for (int i = 1; i < tiles.length-1; i++) {
+            for (int j = 1; j <tiles[i].length-1; j++) {
+                if(tiles[i][j].getValue()==1){
                     purpleCount++;
-                }else if(player==2){
+                }else if(tiles[i][j].getValue()==2){
                     greenCount++;
                 }
             }
         }
-        if(purpleCount!=greenCount){
-            return true;
+        if(purpleCount>greenCount) {
+            return "Player 1 wins";
+        }else if(purpleCount<greenCount){
+            return "Player 2 wins";
         }
-        return false;
+        return "Tie";
     }
     public boolean patternOf5(int player){
         for (int i = 1; i < tiles.length-1; i++) {
@@ -195,6 +206,8 @@ public class Game {
     public void stopPiece(int piece) {
         if( piecesActive.get(piece) instanceof Paint){
             ((Paint) piecesActive.get(piece)).paintTiles(tiles,piecesActive.get(piece).getCurrentRow(),piecesActive.get(piece).getCurrentCol(),playerTurn);
+        }else if(piecesActive.get(piece) instanceof Shadow){
+            ((Shadow) piecesActive.get(piece)).convert(playerTurn,tiles);
         }
         if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0) {
             tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(playerTurn);

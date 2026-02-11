@@ -11,6 +11,7 @@ public class Player {
         this.name = name;
         pieces.add("Standard");
         pieces.add("Paint");
+        pieces.add("Shadow");
     }
     public void setSelectedPiece(int piece){
         selectedPiece = pieces.get(piece);
