@@ -27,6 +27,7 @@ public class HelloController {
     public Label clickableSelectedLabel;
     private Button[][] btn;
     public void initialize(){
+        //test get rid of this after
         game.addPlayers();
         game.getPlayers()[0].getPlayerBombs().add(new Bomb(1));
         game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
@@ -166,11 +167,7 @@ public class HelloController {
     }
 
     public void selectPiece(MouseEvent mouseEvent) {
-        if(playerPiecesListView.getSelectionModel().getSelectedIndex()==0){
-
-        }
         game.getPlayers()[game.getPlayerTurn()-1].setSelectedPiece(playerPiecesListView.getSelectionModel().getSelectedIndex());
         updateScreen();
-
     }
 }

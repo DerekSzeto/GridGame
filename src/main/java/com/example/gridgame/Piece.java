@@ -21,12 +21,12 @@ public class Piece {
     public int getCurrentCol() {
         return currentCol;
     }
-    public void setDirection(int r, int c){
+    public void setDirection(int r, int c,Tile[][] tiles){
         if(c==0){
             direction=  "right";
-        }else if(c==11){
+        }else if(c==tiles[0].length-1){
             direction=  "left";
-        }else if(r==11){
+        }else if(r==tiles.length-1){
             direction=  "up";
         }else if(r==0){
             direction=  "down";
