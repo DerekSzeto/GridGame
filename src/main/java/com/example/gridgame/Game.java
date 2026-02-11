@@ -61,10 +61,6 @@ public class Game {
         return tiles;
     }
 
-
-
-
-
     public void shootPiece(int r, int c, String type){
         if(tiles[r][c].getValue()==4) {
             if(type.equals("Standard")) {

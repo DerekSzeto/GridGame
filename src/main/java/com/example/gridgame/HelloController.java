@@ -25,6 +25,7 @@ public class HelloController {
     public Label pieceSelectedLabel;
     public ListView playerClickableListView;
     public Label clickableSelectedLabel;
+    public Label pieceInfoLabel;
     private Button[][] btn;
     public void initialize(){
         //test get rid of this after
@@ -33,13 +34,20 @@ public class HelloController {
         game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
     }
     private Game game = new Game();
+    public void size8(ActionEvent actionEvent) {
+        handleClick(8);
+    }
 
-    public void handleClick(ActionEvent actionEvent) {
-        int x = Integer.parseInt(dimensionsTextField.getText().substring(0,dimensionsTextField.getText().indexOf(",")));
-        int y = Integer.parseInt(dimensionsTextField.getText().substring(dimensionsTextField.getText().indexOf(",")+1));
-        btn = new Button[x][y];
+    public void size10(ActionEvent actionEvent) {
+        handleClick(10);
+    }
 
-        game.createBoard(x, y);
+    public void size12(ActionEvent actionEvent) {
+        handleClick(12);
+    }
+    public void handleClick(int size) {
+        btn = new Button[size+2][size+2];
+        game.createBoard(size+2,size+2);
         handleTimer();
         gpane.getChildren().clear();
         gpane.setGridLinesVisible(true);
@@ -167,4 +175,6 @@ public class HelloController {
         game.getPlayers()[game.getPlayerTurn()-1].setSelectedPiece(playerPiecesListView.getSelectionModel().getSelectedIndex());
         updateScreen();
     }
+
+
 }

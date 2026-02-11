@@ -5,12 +5,11 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1080.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gridgame.HelloController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1080.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gridgame.HelloController">
   <tabs>
     <Tab text="Game">
       <content>
@@ -19,11 +18,10 @@
                  <GridPane fx:id="gpane" layoutX="260.0" layoutY="131.0" prefHeight="0.0" prefWidth="0.0">
 
                  </GridPane>
-                  <Button fx:id="startButton" layoutX="366.0" layoutY="8.0" mnemonicParsing="false" onAction="#handleClick" prefHeight="30.0" prefWidth="114.0" text="Start Game">
+                  <Button fx:id="startButton" layoutX="304.0" layoutY="31.0" mnemonicParsing="false" onAction="#size8" prefHeight="30.0" prefWidth="114.0" text="8 x 8  Grid">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font></Button>
-                  <TextField fx:id="dimensionsTextField" layoutX="487.0" layoutY="8.0" prefHeight="35.0" prefWidth="149.0" promptText="x,y" />
                   <Label fx:id="winnerLabel" layoutX="881.0" layoutY="407.0" prefHeight="35.0" prefWidth="193.0">
                      <font>
                         <Font size="20.0" />
@@ -50,6 +48,22 @@
                   <Label layoutX="881.0" layoutY="262.0" prefHeight="22.0" prefWidth="190.0" text="Clickables" underline="true">
                      <font>
                         <Font name="Calibri Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="startButton1" layoutX="427.0" layoutY="31.0" mnemonicParsing="false" onAction="#size10" prefHeight="30.0" prefWidth="114.0" text="10 x 10 Grid">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Label fx:id="pieceInfoLabel" alignment="TOP_LEFT" layoutX="775.0" layoutY="67.0" prefHeight="130.0" prefWidth="106.0" text="Label" />
+                  <Button layoutX="555.0" layoutY="31.0" mnemonicParsing="false" onAction="#size12" prefHeight="30.0" prefWidth="114.0" text="12 x 12 Grid">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="423.0" layoutY="1.0" text="Select Grid Size" underline="true">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
                </children></AnchorPane>
