@@ -207,6 +207,14 @@ public class Game {
         }else if(piecesActive.get(piece) instanceof Shadow){
             ((Shadow) piecesActive.get(piece)).convert(playerTurn,tiles);
         }
+        //rocket trail temp value
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                if(tiles[i][j].getValue()==5){
+                    tiles[i][j].setValue(playerTurn);
+                }
+            }
+        }
         if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0) {
             tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(playerTurn);
         }

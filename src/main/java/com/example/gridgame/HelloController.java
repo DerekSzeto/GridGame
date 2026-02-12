@@ -101,7 +101,7 @@ public class HelloController {
             for (int j=0; j< btn[0].length;j++){
                 if (game.getTiles()[i][j].getValue() == 0){
                     btn[i][j].setStyle("-fx-background-color: white");
-                } else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 5){
+                } else if (game.getTiles()[i][j].getValue() == 4){
                     btn[i][j].setStyle("-fx-background-color: navy");
                 }else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 2){
                     btn[i][j].setStyle("-fx-background-color: lime");

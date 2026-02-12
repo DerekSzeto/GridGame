@@ -6,7 +6,7 @@ public class Rocket extends Piece{
     public Rocket(int r, int c){
         super(r,c);
     }
-
+    @Override
     public void move(Tile[][] tiles){
 
         int newRow = currentRow;
@@ -28,6 +28,9 @@ public class Rocket extends Piece{
                 currentRow = newRow;
             } else if (tiles[newRow][newCol].getValue() > 0) {
                 redirected = true;
+                indexStopped[0] = currentRow;
+                indexStopped[1] = currentCol;
+                tiles[indexStopped[0]][indexStopped[1]].setValue(5);
                 redirect(tiles);
             }
         }else{
@@ -40,14 +43,7 @@ public class Rocket extends Piece{
             }
         }
     }
-    public void redirect(Tile[][] tiles){
-        // use recursion?? redirect twice
-//        if(times == 0){
-//
-//        }
-        int[] bounds = new int[4];
-        //0 left, 1 right, 2 top, 3 down
-        if(direction.equals("up")|direction.equals("down")) {
+    public void checkHorizontalBounds(Tile[][] tiles, int[] bounds){
             for (int i = 1; i < currentCol; i++) {
                 if (tiles[currentRow][i].getValue() == 0) {
                     bounds[0]++;
@@ -77,28 +73,54 @@ public class Rocket extends Piece{
                     direction = "right";
                 }
             }
-        }else if(direction.equals("left")|direction.equals("right")){
-
+    }
+    public void checkVerticalBounds(Tile[][] tiles, int[] bounds){
+        for (int i = 1; i < currentRow; i++) {
+            if (tiles[i][currentCol].getValue() == 0) {
+                bounds[2]++;
+            }
+        }
+        //right bound check
+        for (int i = currentRow+1; i < tiles[0].length-1; i++) {
+            if (tiles[i][currentCol].getValue() == 0) {
+                bounds[3]++;
+            }
         }
 
 
-//        for (int i = 1; i < tiles[0].length-1; i++) {
-//            int colCount = 0;
-//            for (int j = 1; j < tiles.length-1; j++) {
-//                if (tiles[j][i].getValue() == player) {
-//                    colCount++;
-//                } else {
-//                    colCount = 0;
-//                }
-//                if(colCount==5){
+        if(bounds[2]>bounds[3]){
+            System.out.println("up redirect");
+            direction = "up";
+
+        }else if(bounds[3]>bounds[2]){
+            System.out.println("down redirect");
+            direction = "down";
+
+        }else{
+            int randomDirection = (int) (Math.random()*2);
+            if(randomDirection==0){
+                direction = "up";
+            }else{
+                direction = "down";
+            }
+        }
+    }
+    public void redirect(Tile[][] tiles){
+        // use recursion?? redirect twice
+//        if(times == 0){
 //
-//
-//                }
-//            }
 //        }
+        int[] bounds = new int[4];
+        //0 left, 1 right, 2 top, 3 down
+        if(direction.equals("up")|direction.equals("down")) {
+            checkHorizontalBounds(tiles, bounds);
+        }else if(direction.equals("left")|direction.equals("right")){
+            checkVerticalBounds(tiles, bounds);
+        }
+
+
     }
     public void trail(Tile[][] tiles){
-        tiles[currentRow][currentCol].setValue(tiles[currentRow][currentCol]);
-
+        tiles[currentRow][currentCol].setValue(5);
     }
 }
