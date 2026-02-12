@@ -70,6 +70,8 @@ public class Game {
                 piecesActive.add(new Paint(r, c,1));
             }else if(type.equals("Shadow")) {
                 piecesActive.add(new Shadow(r,c));
+            }else if(type.equals("Rocket")){
+                piecesActive.add(new Rocket(r,c));
             }
             piecesActive.getFirst().setDirection(r,c,tiles);
         }
