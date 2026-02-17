@@ -13,6 +13,7 @@ public class Player {
         pieces.add("Paint");
         pieces.add("Shadow");
         pieces.add("Rocket");
+        pieces.add("Eraser");
     }
     public void setSelectedPiece(int piece){
         selectedPiece = pieces.get(piece);

@@ -108,6 +108,12 @@ public class HelloController {
                 }
                 else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 1){
                     btn[i][j].setStyle("-fx-background-color: magenta");
+                }else if(game.getTiles()[i][j].getValue() == 6){
+                    btn[i][j].setStyle("-fx-background-color: olive");
+                }else if(game.getTiles()[i][j].getValue() == 7){
+                    btn[i][j].setStyle("-fx-background-color: goldenrod");
+                }else if(game.getTiles()[i][j].getValue() == 9){
+                    btn[i][j].setStyle("-fx-background-color: crimson");
                 }
             }
         }

@@ -2,7 +2,6 @@ package com.example.gridgame;
 
 public class Rocket extends Piece{
     private boolean redirected = false;
-    private int[] indexStopped = new int[2];
     public Rocket(int r, int c){
         super(r,c);
     }
@@ -28,9 +27,7 @@ public class Rocket extends Piece{
                 currentRow = newRow;
             } else if (tiles[newRow][newCol].getValue() > 0) {
                 redirected = true;
-                indexStopped[0] = currentRow;
-                indexStopped[1] = currentCol;
-                tiles[indexStopped[0]][indexStopped[1]].setValue(5);
+                tiles[currentRow][currentCol].setValue(5);
                 redirect(tiles);
             }
         }else{

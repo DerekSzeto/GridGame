@@ -44,16 +44,16 @@ public class Game {
 
         for (int i = 0; i < row; i++){
             for (int j = 0; j < col; j++){
-                tiles[i][j] = new Tile(0);
+                tiles[i][j] = new Tile(i,j,0);
             }
         }
         for (int i = 0; i < row; i++) {
-            tiles[i][0] = new Tile(4);
-            tiles[i][tiles[0].length-1] = new Tile(4);
+            tiles[i][0] = new Tile(i,0,4);
+            tiles[i][tiles[0].length-1] = new Tile(i,tiles.length-1,4);
         }
         for (int i = 0; i < col; i++) {
-            tiles[0][i] = new Tile(4);
-            tiles[tiles.length-1][i] = new Tile(4);
+            tiles[0][i] = new Tile(0,i,4);
+            tiles[tiles.length-1][i] = new Tile(tiles.length-1,i,4);
         }
     }
 
@@ -72,6 +72,8 @@ public class Game {
                 piecesActive.add(new Shadow(r,c));
             }else if(type.equals("Rocket")){
                 piecesActive.add(new Rocket(r,c));
+            }else if(type.equals("Eraser")){
+                piecesActive.add(new Eraser(r,c));
             }
             piecesActive.getFirst().setDirection(r,c,tiles);
         }
@@ -206,6 +208,10 @@ public class Game {
             ((Paint) piecesActive.get(piece)).paintTiles(tiles,piecesActive.get(piece).getCurrentRow(),piecesActive.get(piece).getCurrentCol(),playerTurn);
         }else if(piecesActive.get(piece) instanceof Shadow){
             ((Shadow) piecesActive.get(piece)).convert(playerTurn,tiles);
+        }else if(piecesActive.get(piece) instanceof Zombie) {
+            if(((Zombie) piecesActive.get(piece)).infect(tiles)){
+
+            };
         }
         //rocket trail temp value
         for (int i = 0; i < tiles.length; i++) {
@@ -215,7 +221,7 @@ public class Game {
                 }
             }
         }
-        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0) {
+        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0 & !(piecesActive.get(piece) instanceof Eraser)) {
             tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(playerTurn);
         }
         if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() < 4) {
