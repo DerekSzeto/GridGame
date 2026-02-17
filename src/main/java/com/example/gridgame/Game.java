@@ -74,6 +74,8 @@ public class Game {
                 piecesActive.add(new Rocket(r,c));
             }else if(type.equals("Eraser")){
                 piecesActive.add(new Eraser(r,c));
+            }else if(type.equals("Zombie")){
+                piecesActive.add(new Zombie(r,c,playerTurn));
             }
             piecesActive.getFirst().setDirection(r,c,tiles);
         }
@@ -208,11 +210,9 @@ public class Game {
             ((Paint) piecesActive.get(piece)).paintTiles(tiles,piecesActive.get(piece).getCurrentRow(),piecesActive.get(piece).getCurrentCol(),playerTurn);
         }else if(piecesActive.get(piece) instanceof Shadow){
             ((Shadow) piecesActive.get(piece)).convert(playerTurn,tiles);
-        }else if(piecesActive.get(piece) instanceof Zombie) {
-            if(((Zombie) piecesActive.get(piece)).infect(tiles)){
-
-            };
         }
+//        infection();
+
         //rocket trail temp value
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
@@ -221,13 +221,31 @@ public class Game {
                 }
             }
         }
-        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0 & !(piecesActive.get(piece) instanceof Eraser)) {
+        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0 & !(piecesActive.get(piece) instanceof Eraser) & !(piecesActive.get(piece) instanceof Zombie)) {
             tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(playerTurn);
+        }else if((piecesActive.get(piece) instanceof Zombie)){
+            tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(6);
         }
-        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() < 4) {
+
+        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() < 4 & (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() != 6)) {
             switchPlayer();
         }
-        piecesActive.remove(piece);
 
+        if(!(piecesActive.get(piece) instanceof Zombie)) {
+            piecesActive.remove(piece);
+        }
+
+    }
+    public void infection(){
+        for (int i = 0; i < piecesActive.size(); i++) {
+            if(piecesActive.get(i) instanceof Zombie){
+                if(((Zombie) piecesActive.get(i)).infect(tiles)){
+                    ((Zombie) piecesActive.get(i)).spawn(tiles,piecesActive);
+                    System.out.println("another one");
+                }else{
+                    System.out.println("infected");
+                }
+            }
+        }
     }
 }

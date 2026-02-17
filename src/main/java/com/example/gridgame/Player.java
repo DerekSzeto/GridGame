@@ -14,6 +14,7 @@ public class Player {
         pieces.add("Shadow");
         pieces.add("Rocket");
         pieces.add("Eraser");
+        pieces.add("Zombie");
     }
     public void setSelectedPiece(int piece){
         selectedPiece = pieces.get(piece);
