@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1080.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gridgame.HelloController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1080.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gridgame.HelloController">
   <tabs>
     <Tab text="Game">
       <content>
@@ -22,9 +22,9 @@
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font></Button>
-                  <Label fx:id="winnerLabel" layoutX="881.0" layoutY="407.0" prefHeight="35.0" prefWidth="193.0">
+                  <Label fx:id="winnerLabel" layoutX="392.0" layoutY="70.0" prefHeight="35.0" prefWidth="193.0">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="System Bold" size="20.0" />
                      </font></Label>
                   <Label fx:id="playerTurnLabel" layoutX="884.0" layoutY="8.0" prefHeight="28.0" prefWidth="189.0" text="Player Turn: ">
                      <font>
@@ -66,6 +66,17 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
+                  <ListView fx:id="playerStationsListView" layoutX="880.0" layoutY="468.0" prefHeight="123.0" prefWidth="192.0" />
+                  <Label layoutX="880.0" layoutY="446.0" prefHeight="22.0" prefWidth="190.0" text="Stations" underline="true">
+                     <font>
+                        <Font name="Calibri Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="restartButton" layoutX="924.0" layoutY="627.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="35.0" prefWidth="146.0" text="Restart Game">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
                </children></AnchorPane>
       </content>
     </Tab>

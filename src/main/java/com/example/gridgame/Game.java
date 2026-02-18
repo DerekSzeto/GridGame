@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class Game {
     private Tile[][] tiles;
     private int playerTurn = (int)(Math.random()*2+1);
-    private ArrayList<Piece> piecesActive = new ArrayList<>();
+    private ArrayList<Piece> piecesShot = new ArrayList<>();
+    private ArrayList<Station> stations = new ArrayList<>();
     private Player player1 = new Player("boi1");
     private Player player2 = new Player("boi2");
     private Player[] players = new Player[2];
@@ -64,24 +65,24 @@ public class Game {
     public void shootPiece(int r, int c, String type){
         if(tiles[r][c].getValue()==4) {
             if(type.equals("Standard")) {
-                piecesActive.add(new Piece(r, c));
+                piecesShot.add(new Piece(r, c));
             }
             else if(type.equals("Paint")) {
-                piecesActive.add(new Paint(r, c,1));
+                piecesShot.add(0,new Paint(r, c,1));
             }else if(type.equals("Shadow")) {
-                piecesActive.add(new Shadow(r,c));
+                piecesShot.add(0,new Shadow(r,c));
             }else if(type.equals("Rocket")){
-                piecesActive.add(new Rocket(r,c));
+                piecesShot.add(0,new Rocket(r,c));
             }else if(type.equals("Eraser")){
-                piecesActive.add(new Eraser(r,c));
+                piecesShot.add(0,new Eraser(r,c));
             }else if(type.equals("Zombie")){
-                piecesActive.add(new Zombie(r,c,playerTurn));
+                piecesShot.add(0,new Zombie(r,c,playerTurn));
             }
-            piecesActive.getFirst().setDirection(r,c,tiles);
+            piecesShot.getFirst().setDirection(r,c,tiles);
         }
     }
-    public ArrayList<Piece> getPiecesActive(){
-        return piecesActive;
+    public ArrayList<Piece> getPiecesShot(){
+        return piecesShot;
     }
     public int getPlayerTurn() {
         return playerTurn;
@@ -95,6 +96,7 @@ public class Game {
     }
     public String checkGameOver(int player){
         if(patternOf5(player)){
+            System.out.println("game over");
             return "Player "+ player + " wins";
         }else if(shootersLocked()){
             return mostAreaCovered();
@@ -204,16 +206,7 @@ public class Game {
         players[player].getPlayerBombs().removeFirst();
         switchPlayer();
     }
-
-    public void stopPiece(int piece) {
-        if( piecesActive.get(piece) instanceof Paint){
-            ((Paint) piecesActive.get(piece)).paintTiles(tiles,piecesActive.get(piece).getCurrentRow(),piecesActive.get(piece).getCurrentCol(),playerTurn);
-        }else if(piecesActive.get(piece) instanceof Shadow){
-            ((Shadow) piecesActive.get(piece)).convert(playerTurn,tiles);
-        }
-//        infection();
-
-        //rocket trail temp value
+    public void rocketTrail(){
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
                 if(tiles[i][j].getValue()==5){
@@ -221,31 +214,55 @@ public class Game {
                 }
             }
         }
-        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() == 0 & !(piecesActive.get(piece) instanceof Eraser) & !(piecesActive.get(piece) instanceof Zombie)) {
-            tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(playerTurn);
-        }else if((piecesActive.get(piece) instanceof Zombie)){
-            tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].setValue(6);
+    }
+    public void stopPiece(int piece) {
+        if( piecesShot.get(piece) instanceof Paint){
+            ((Paint) piecesShot.get(piece)).paintTiles(tiles, piecesShot.get(piece).getCurrentRow(), piecesShot.get(piece).getCurrentCol(),playerTurn);
+        }else if(piecesShot.get(piece) instanceof Shadow){
+            ((Shadow) piecesShot.get(piece)).convert(playerTurn,tiles);
+        }else if(piecesShot.get(piece) instanceof Zombie){
+            ((Zombie) piecesShot.get(piece)).action(tiles,stations);
         }
 
-        if (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() < 4 & (tiles[piecesActive.get(piece).getCurrentRow()][piecesActive.get(piece).getCurrentCol()].getValue() != 6)) {
+
+        //rocket trail temp value
+        rocketTrail();
+
+        if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 0 & !(piecesShot.get(piece) instanceof Eraser)) {
+            tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].setValue(playerTurn);
+        }
+
+        if ((tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() < 4 )|tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 6){
             switchPlayer();
         }
 
-        if(!(piecesActive.get(piece) instanceof Zombie)) {
-            piecesActive.remove(piece);
-        }
+        piecesShot.remove(piece);
+
 
     }
-    public void infection(){
-        for (int i = 0; i < piecesActive.size(); i++) {
-            if(piecesActive.get(i) instanceof Zombie){
-                if(((Zombie) piecesActive.get(i)).infect(tiles)){
-                    ((Zombie) piecesActive.get(i)).spawn(tiles,piecesActive);
-                    System.out.println("another one");
-                }else{
-                    System.out.println("infected");
-                }
+    public void activateStations() {
+        for (int i = 0; i < stations.size(); i++) {
+            if(stations.get(i) instanceof Virus){
+                ((Virus) stations.get(i)).action(tiles,stations);
             }
         }
     }
+    public void virus(){
+        int virusCount = 0;
+        for (int i = 0; i < stations.size(); i++) {
+            if(stations.get(i) instanceof Virus){
+                virusCount++;
+            }
+        }
+
+        for (int i = 0; i < virusCount; i++) {
+            if(stations.get(i) instanceof Virus) {
+                ((Virus) stations.get(i)).action(tiles, stations);
+            }
+        }
+    }
+    public ArrayList<Station> getStations() {
+        return stations;
+    }
+
 }

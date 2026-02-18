@@ -26,6 +26,8 @@ public class HelloController {
     public ListView playerClickableListView;
     public Label clickableSelectedLabel;
     public Label pieceInfoLabel;
+    public ListView playerStationsListView;
+    public Button restartButton;
     private Button[][] btn;
     public void initialize(){
         //test get rid of this after
@@ -34,6 +36,8 @@ public class HelloController {
         game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
     }
     private Game game = new Game();
+
+    //change size to choiceBox selection
     public void size8(ActionEvent actionEvent) {
         handleClick(8);
     }
@@ -71,17 +75,19 @@ public class HelloController {
                 int row = GridPane.getRowIndex(clicked);
                 int col = GridPane.getColumnIndex(clicked);
                 System.out.println("(" + row + "," + col + ")" + " Value: "+ game.getTiles()[row][col].getValue());
-
-                if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) { //shoot
-                    game.shootPiece(row, col, game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece());
-                } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
-                    if(game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size()>=1){
-                        game.useBomb(game.getPlayerTurn()-1, row, col);
-                        System.out.println("used bomb");
+                if(!game.isGameOver()) {
+                    if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) { //shoot
+                        game.shootPiece(row, col, game.getPlayers()[game.getPlayerTurn() - 1].getSelectedPiece());
+                    } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
+                        if (game.getPlayers()[game.getPlayerTurn() - 1].getPlayerBombs().size() >= 1) {
+                            game.useBomb(game.getPlayerTurn() - 1, row, col);
+                            System.out.println("used bomb");
+                        }
                     }
-                }
+                    game.activateStations();
 
-                updateScreen();
+                    updateScreen();
+                }
             }
         };
 
@@ -97,6 +103,7 @@ public class HelloController {
 //        gpane.setGridLinesVisible(true);
     public void updateScreen(){
         //updates all tiles
+
         for (int i=0; i< btn.length;i++){
             for (int j=0; j< btn[0].length;j++){
                 if (game.getTiles()[i][j].getValue() == 0){
@@ -119,7 +126,7 @@ public class HelloController {
         }
 
         //does the motion
-        for (Piece x : game.getPiecesActive()) {
+        for (Piece x : game.getPiecesShot()) {
             if (game.getPlayerTurn() == 1) {
                 btn[x.getCurrentRow()][x.getCurrentCol()].setStyle("-fx-background-color: #cd0be3");
             } else {
@@ -155,6 +162,7 @@ public class HelloController {
         for (int i = 1; i < 3; i++) {
             winnerLabel.setText(game.checkGameOver(i));
         }
+        System.out.println(winnerLabel.getText());
     }
     public void handleTimer() {
         new AnimationTimer(){
@@ -162,9 +170,9 @@ public class HelloController {
             @Override
             public void handle(long l) {
                 if(!game.isGameOver()){
-                    for (int i = 0; i < game.getPiecesActive().size(); i++) {
-                        if (game.getPiecesActive().get(i).canMove()) {
-                            game.getPiecesActive().get(i).move(game.getTiles());
+                    for (int i = 0; i < game.getPiecesShot().size(); i++) {
+                        if (game.getPiecesShot().get(i).canMove()) {
+                            game.getPiecesShot().get(i).move(game.getTiles());
 
                         } else {
                             game.stopPiece(i);
@@ -183,4 +191,6 @@ public class HelloController {
     }
 
 
+    public void restartGame(ActionEvent actionEvent) {
+    }
 }

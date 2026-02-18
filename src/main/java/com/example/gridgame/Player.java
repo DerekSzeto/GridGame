@@ -3,6 +3,7 @@ package com.example.gridgame;
 import java.util.ArrayList;
 
 public class Player {
+    private String[] pieceInfo = {};
     private ArrayList<String> pieces = new ArrayList<>();
     private String selectedPiece = "Standard";
     private ArrayList<Bomb> bombs = new ArrayList<>();
