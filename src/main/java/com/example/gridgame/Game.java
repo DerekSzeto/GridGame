@@ -94,14 +94,16 @@ public class Game {
             playerTurn = 1;
         }
     }
-    public String checkGameOver(int player){
-        if(patternOf5(player)){
-            System.out.println("game over");
-            return "Player "+ player + " wins";
-        }else if(shootersLocked()){
-            return mostAreaCovered();
+    public int checkGameOver(){
+        for (int i = 1; i < 3; i++) {
+            if (patternOf5(i)) {
+                System.out.println("game over");
+                return i;
+            } else if (shootersLocked()) {
+                return mostAreaCovered();
+            }
         }
-        return null;
+        return 0;
     }
     public boolean shootersLocked(){
         //not tested yet
@@ -140,7 +142,7 @@ public class Game {
         return false;
         //check the counts of the stuff and if it matches the row and col count tmr, if all are locked return true
     }
-    public String mostAreaCovered(){
+    public int mostAreaCovered(){
         //check if the borders can shoot, once cant shoot game is over, checks who has painted the most
 
         int purpleCount = 0;
@@ -155,11 +157,11 @@ public class Game {
             }
         }
         if(purpleCount>greenCount) {
-            return "Player 1 wins";
+            return 1;
         }else if(purpleCount<greenCount){
-            return "Player 2 wins";
+            return 2;
         }
-        return "Tie";
+        return 3;
     }
     public boolean patternOf5(int player){
         for (int i = 1; i < tiles.length-1; i++) {

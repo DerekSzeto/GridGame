@@ -28,9 +28,9 @@ public class Virus extends Station{
 
         int prob = (int)((Math.random()*100)+1);
 
-        if(prob<=50){
+        if(prob<=70){
             infect(tiles);
-        }else if(prob<=70){
+        }else if(prob<=80){
             spawn(tiles,stations);
         }
         //else does nothing
@@ -45,5 +45,6 @@ public class Virus extends Station{
         Tile randomTile = getRandomNearbyTile(tiles);
         stations.add(new Virus(randomTile.getRow(),randomTile.getCol(),value));
         randomTile.setValue(6);
+        System.out.println("size: "+stations.size());
     }
 }

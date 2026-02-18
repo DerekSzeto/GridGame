@@ -76,16 +76,15 @@ public class HelloController {
                 int col = GridPane.getColumnIndex(clicked);
                 System.out.println("(" + row + "," + col + ")" + " Value: "+ game.getTiles()[row][col].getValue());
                 if(!game.isGameOver()) {
-                    if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver()) { //shoot
+                    if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver() & game.getTiles()[row][col].getValue()==4) { //shoot
                         game.shootPiece(row, col, game.getPlayers()[game.getPlayerTurn() - 1].getSelectedPiece());
+                        game.activateStations();
                     } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
                         if (game.getPlayers()[game.getPlayerTurn() - 1].getPlayerBombs().size() >= 1) {
                             game.useBomb(game.getPlayerTurn() - 1, row, col);
                             System.out.println("used bomb");
                         }
                     }
-                    game.activateStations();
-
                     updateScreen();
                 }
             }
@@ -159,10 +158,14 @@ public class HelloController {
 
     }
     public void checkGameOver(){
-        for (int i = 1; i < 3; i++) {
-            winnerLabel.setText(game.checkGameOver(i));
+        int player = game.checkGameOver();
+        if(player!=0) {
+            winnerLabel.setText("Player " + player + " wins");
+            if (player == 3) {
+                winnerLabel.setText("Tie");
+            }
         }
-        System.out.println(winnerLabel.getText());
+
     }
     public void handleTimer() {
         new AnimationTimer(){
