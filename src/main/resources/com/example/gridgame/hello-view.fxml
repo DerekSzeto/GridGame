@@ -47,7 +47,7 @@
                         <Font name="Calibri Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Button fx:id="startButton1" layoutX="427.0" layoutY="31.0" mnemonicParsing="false" onAction="#size10" prefHeight="30.0" prefWidth="114.0" text="10 x 10 Grid">
+                  <Button fx:id="startButton" layoutX="427.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleClick" prefHeight="30.0" prefWidth="114.0" text="10 x 10 Grid">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
@@ -69,7 +69,10 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Button>
-                  <ChoiceBox fx:id="selectGridSize" layoutX="585.0" layoutY="36.0" prefHeight="52.0" prefWidth="150.0" />
+                   <ChoiceBox fx:id="selectGridSize" layoutX="6.0" layoutY="3.0" prefHeight="45.0" prefWidth="162.0">
+                       <items>
+                       </items>
+                   </ChoiceBox>
 
                </children></AnchorPane>
       </content>

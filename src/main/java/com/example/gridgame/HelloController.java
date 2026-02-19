@@ -20,7 +20,7 @@ public class HelloController {
 
     public GridPane gpane;
     public Button startButton;
-    public ChoiceBox<String> setGridSize;
+    public ChoiceBox<String> selectGridSize;
     public Label winnerLabel;
     public Label playerTurnLabel;
     public ListView playerPiecesListView;
@@ -30,13 +30,13 @@ public class HelloController {
     public Label pieceInfoLabel;
     public ListView playerStationsListView;
     public Button restartButton;
-    public ChoiceBox<String> selectGridSize;
+
     private Button[][] btn;
     public void initialize(){
         //test get rid of this after
 
-        setGridSize.getItems().addAll("8", "9", "10","11","16","17");
-        setGridSize.setValue("10");
+        selectGridSize.getItems().addAll("8", "9", "10","11","16","17");
+        selectGridSize.setValue("10");
 
 
         game.addPlayers();
@@ -48,8 +48,8 @@ public class HelloController {
     //change size to choiceBox selection
 
     public void handleClick() {
-        int gridSize = Integer.parseInt(selectGridSize.getValue()+2);
-
+        int gridSize = Integer.parseInt(selectGridSize.getValue())+2;
+        System.out.println(gridSize);
         btn = new Button[gridSize][gridSize];
         game.createBoard(gridSize,gridSize);
         handleTimer();

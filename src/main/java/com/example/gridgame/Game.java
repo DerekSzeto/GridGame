@@ -78,7 +78,7 @@ public class Game {
             }else if(type.equals("Zombie")){
                 piecesShot.add(0,new Zombie(r,c,playerTurn));
             }else if(type.equals("Cross")){
-                piecesShot.add(0,new Cross(r,c,""));
+                piecesShot.add(0,new Cross(r,c,"color"));
                 ((Cross) piecesShot.getFirst()).determineActivationPoints(tiles);
             }else if(type.equals("Spiral")){
                 piecesShot.add(0,new Spiral(r,c,2,playerTurn));

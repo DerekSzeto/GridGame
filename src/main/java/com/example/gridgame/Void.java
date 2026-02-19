@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Void extends Station{
     private ArrayList<Tile> area = new ArrayList<>();
-    private boolean pull = false;
+    private boolean expansion = false;
     private int radius = 1;
     public Void(int r, int c, int v){
         super(r,c,v);
     }
     public void stage(){
-        if(pull){
+        if(expansion){
             radius = 2;
         }else{
             radius = 1;
         }
     }
-    public void pull(int r, int c, Tile[][] tiles){
+    public void deletion(int r, int c, Tile[][] tiles){
         int leftBound = -1 * radius ;
         int rightBound = 1 + radius ;
         for (int i = leftBound; i < rightBound; i++) {
@@ -30,6 +30,9 @@ public class Void extends Station{
                 }
             }
         }
+    }
+    public void pull(int r, int c){
+        //this should decide what pieces to pull closer to the void station
     }
     public void deflect(Piece piece){
         ;
