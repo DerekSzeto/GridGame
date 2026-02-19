@@ -83,7 +83,7 @@ public class Game {
             }else if(type.equals("Spiral")){
                 piecesShot.add(0,new Spiral(r,c,2,playerTurn));
             }
-            piecesShot.getFirst().setDirection(r,c,tiles);
+            piecesShot.getFirst().setInitialDirection(r,c,tiles);
         }
     }
     public ArrayList<Piece> getPiecesShot(){

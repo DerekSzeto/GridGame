@@ -21,7 +21,7 @@ public class Piece {
     public int getCurrentCol() {
         return currentCol;
     }
-    public void setDirection(int r, int c,Tile[][] tiles){
+    public void setInitialDirection(int r, int c, Tile[][] tiles){
         if(c==0){
             direction=  "right";
         }else if(c==tiles[0].length-1){
@@ -58,7 +58,12 @@ public class Piece {
 
 
     }
-
+    public String getDirection(){
+        return direction;
+    }
+    public void setDirection(String direction){
+        this.direction = direction;
+    }
     public boolean canMove() {
         return canMove;
     }

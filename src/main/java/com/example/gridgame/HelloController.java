@@ -3,13 +3,15 @@ package com.example.gridgame;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+
+import java.awt.*;
 
 public class HelloController {
 
@@ -18,7 +20,7 @@ public class HelloController {
 
     public GridPane gpane;
     public Button startButton;
-    public TextField dimensionsTextField;
+    public ChoiceBox<String> setGridSize;
     public Label winnerLabel;
     public Label playerTurnLabel;
     public ListView playerPiecesListView;
@@ -28,9 +30,15 @@ public class HelloController {
     public Label pieceInfoLabel;
     public ListView playerStationsListView;
     public Button restartButton;
+    public ChoiceBox<String> selectGridSize;
     private Button[][] btn;
     public void initialize(){
         //test get rid of this after
+
+        setGridSize.getItems().addAll("8", "9", "10","11","16","17");
+        setGridSize.setValue("10");
+
+
         game.addPlayers();
         game.getPlayers()[0].getPlayerBombs().add(new Bomb(1));
         game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
@@ -38,20 +46,12 @@ public class HelloController {
     private Game game = new Game();
 
     //change size to choiceBox selection
-    public void size8(ActionEvent actionEvent) {
-        handleClick(8);
-    }
 
-    public void size10(ActionEvent actionEvent) {
-        handleClick(10);
-    }
+    public void handleClick() {
+        int gridSize = Integer.parseInt(selectGridSize.getValue()+2);
 
-    public void size12(ActionEvent actionEvent) {
-        handleClick(12);
-    }
-    public void handleClick(int size) {
-        btn = new Button[size+2][size+2];
-        game.createBoard(size+2,size+2);
+        btn = new Button[gridSize][gridSize];
+        game.createBoard(gridSize,gridSize);
         handleTimer();
         gpane.getChildren().clear();
         gpane.setGridLinesVisible(true);
@@ -118,6 +118,8 @@ public class HelloController {
                     btn[i][j].setStyle("-fx-background-color: goldenrod");
                 }else if(game.getTiles()[i][j].getValue() == 9){
                     btn[i][j].setStyle("-fx-background-color: crimson");
+                }else if(game.getTiles()[i][j].getValue() == 10){
+                    btn[i][j].setStyle("-fx-background-color: black");
                 }
             }
         }
@@ -193,5 +195,14 @@ public class HelloController {
 
 
     public void restartGame(ActionEvent actionEvent) {
+        restartButton.setVisible(false);
+        winnerLabel.setText("");
+
+        for (int i = 0; i < btn.length; i++) {
+            for (int j = 0; j < btn[0].length; j++) {
+                gpane.getChildren().remove(btn[i][j]);
+            }
+        }
+        handleClick();
     }
 }

@@ -5,8 +5,7 @@ import java.util.ArrayList;
 public class Station {
     protected int row;
     protected int col;
-    protected int value;
-    protected ArrayList<Tile> area = new ArrayList<>();
+    protected int value;;
     public Station(int row, int col,int value){
         this.row = row;
         this.col = col;
