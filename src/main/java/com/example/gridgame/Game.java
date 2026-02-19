@@ -77,6 +77,11 @@ public class Game {
                 piecesShot.add(0,new Eraser(r,c));
             }else if(type.equals("Zombie")){
                 piecesShot.add(0,new Zombie(r,c,playerTurn));
+            }else if(type.equals("Cross")){
+                piecesShot.add(0,new Cross(r,c,""));
+                ((Cross) piecesShot.getFirst()).determineActivationPoints(tiles);
+            }else if(type.equals("Spiral")){
+                piecesShot.add(0,new Spiral(r,c,2,playerTurn));
             }
             piecesShot.getFirst().setDirection(r,c,tiles);
         }
@@ -224,13 +229,17 @@ public class Game {
             ((Shadow) piecesShot.get(piece)).convert(playerTurn,tiles);
         }else if(piecesShot.get(piece) instanceof Zombie){
             ((Zombie) piecesShot.get(piece)).action(tiles,stations);
+        }else if(piecesShot.get(piece) instanceof Cross){
+            if(((Cross) piecesShot.get(piece)).atDestination()){
+                ((Cross) piecesShot.get(piece)).diagonals(tiles);
+            };
         }
 
 
         //rocket trail temp value
         rocketTrail();
 
-        if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 0 & !(piecesShot.get(piece) instanceof Eraser)) {
+        if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 0 & !(piecesShot.get(piece) instanceof Eraser) & !(piecesShot.get(piece) instanceof Spiral)) {
             tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].setValue(playerTurn);
         }
 
@@ -243,11 +252,7 @@ public class Game {
 
     }
     public void activateStations() {
-        for (int i = 0; i < stations.size(); i++) {
-            if(stations.get(i) instanceof Virus){
-                ((Virus) stations.get(i)).action(tiles,stations);
-            }
-        }
+        virus();
     }
     public void virus(){
         int virusCount = 0;

@@ -69,8 +69,6 @@ public class HelloController {
         EventHandler<MouseEvent> z = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println(event.getSource());
-
                 Button clicked = (Button) event.getSource();
                 int row = GridPane.getRowIndex(clicked);
                 int col = GridPane.getColumnIndex(clicked);

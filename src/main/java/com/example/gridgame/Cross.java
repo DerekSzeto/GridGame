@@ -13,8 +13,17 @@ public class Cross extends Piece{
         //downward to the right
         for (int i = 1; i < tiles.length-2 ; i++) {
             if(mode.equals("erase")){
-
+                tiles[i][i].setValue(0);
             }
+        }
+        int tileCount = 0;
+        int row = 1;
+        int col = tiles.length-2;
+        while(tileCount<tiles.length-2){
+            tiles[row][col].setValue(0);
+            row++;
+            col--;
+            tileCount++;
         }
     }
     public boolean atDestination(){
