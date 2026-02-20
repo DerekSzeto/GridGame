@@ -7,6 +7,8 @@ public class Player {
     private ArrayList<String> pieces = new ArrayList<>();
     private String selectedPiece = "Standard";
     private ArrayList<Bomb> bombs = new ArrayList<>();
+    private int creds;
+
     private String name;
     public Player(String name){
         this.name = name;

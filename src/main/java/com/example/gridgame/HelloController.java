@@ -30,6 +30,7 @@ public class HelloController {
     public Label pieceInfoLabel;
     public ListView playerStationsListView;
     public Button restartButton;
+    public Button resetButton;
 
     private Button[][] btn;
     public void initialize(){
@@ -49,12 +50,14 @@ public class HelloController {
 
     public void handleClick() {
         int gridSize = Integer.parseInt(selectGridSize.getValue())+2;
-        System.out.println(gridSize);
+        selectGridSize.setDisable(true);
+
         btn = new Button[gridSize][gridSize];
         game.createBoard(gridSize,gridSize);
         handleTimer();
         gpane.getChildren().clear();
         gpane.setGridLinesVisible(true);
+
         for (int i = 0; i < btn.length; i++) {
             for (int j = 0; j < btn[0].length; j++) {
                 btn[i][j] = new Button(" ");
@@ -160,6 +163,8 @@ public class HelloController {
     public void checkGameOver(){
         int player = game.checkGameOver();
         if(player!=0) {
+            restartButton.setVisible(true);
+            selectGridSize.setDisable(false);
             winnerLabel.setText("Player " + player + " wins");
             if (player == 3) {
                 winnerLabel.setText("Tie");
@@ -197,12 +202,17 @@ public class HelloController {
     public void restartGame(ActionEvent actionEvent) {
         restartButton.setVisible(false);
         winnerLabel.setText("");
+        game.setGameOver(false);
 
         for (int i = 0; i < btn.length; i++) {
             for (int j = 0; j < btn[0].length; j++) {
                 gpane.getChildren().remove(btn[i][j]);
             }
         }
+
         handleClick();
+    }
+
+    public void resetGrid(ActionEvent actionEvent) {
     }
 }
