@@ -231,7 +231,7 @@ public class Game {
             ((Zombie) piecesShot.get(piece)).action(tiles,stations);
         }else if(piecesShot.get(piece) instanceof Cross){
             if(((Cross) piecesShot.get(piece)).atDestination()){
-                ((Cross) piecesShot.get(piece)).diagonals(tiles);
+                ((Cross) piecesShot.get(piece)).diagonals(tiles,playerTurn);
             };
         }
 
