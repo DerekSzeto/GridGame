@@ -5,6 +5,7 @@ public class Tile {
     private int tileValue;
     private int row;
     private int col;
+    private boolean special = false;
     public Tile(int r, int c,int value) {
         this.row = r;
         this.col = c;
@@ -22,5 +23,8 @@ public class Tile {
     }
     public void setValue(int value) {
         tileValue = value;
+    }
+    public void setTileSpecial(boolean special){
+        this.special = special;
     }
 }

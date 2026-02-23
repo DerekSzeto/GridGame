@@ -20,7 +20,7 @@ public class Zombie extends Piece{
                 }
             }
         }
-        for (int i = nearbyTiles.size()-1; i > 0; i--) {
+        for (int i = nearbyTiles.size()-1; i >= 0; i--) {
             if(nearbyTiles.get(i).getValue()==6 || nearbyTiles.get(i).getValue()==4 || nearbyTiles.get(i).getValue()==value){
                 nearbyTiles.remove(i);
             }

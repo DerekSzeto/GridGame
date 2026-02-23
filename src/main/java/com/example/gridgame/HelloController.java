@@ -11,6 +11,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class HelloController {
@@ -31,6 +32,13 @@ public class HelloController {
     public ListView playerStationsListView;
     public Button restartButton;
     public Button resetButton;
+    public ListView selectPlayerBuyingListView;
+    public ListView shopPiecesListView;
+    public ListView shopClickablesListView;
+    public ListView shopStationListView;
+    public Label playerBuyingLabel;
+    public Label purchaseLabel;
+    public Button buyPieceButton;
 
     private Button[][] btn;
     public void initialize(){
@@ -41,12 +49,37 @@ public class HelloController {
 
 
         game.addPlayers();
+
+        for (int i = 0; i < game.getPlayers().length; i++) {
+            selectPlayerBuyingListView.getItems().add(game.getPlayers()[i].getName() + " | Credit: " + game.getPlayers()[i].getCredits());
+        }
+
         game.getPlayers()[0].getPlayerBombs().add(new Bomb(1));
         game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
     }
     private Game game = new Game();
+    
+    public void updateShop(){
+        selectPlayerBuyingListView.getItems().clear();
+        shopPiecesListView.getItems().clear();
+        shopClickablesListView.getItems().clear();
+        shopStationListView.getItems().clear();
+        purchaseLabel.setText("");
 
-    //change size to choiceBox selection
+        for (int i = 0; i < game.getPlayers().length; i++) {
+            selectPlayerBuyingListView.getItems().add(game.getPlayers()[i].getName() + " | Credit: " + game.getPlayers()[i].getCredits());
+        }
+        for (int i = 0; i < game.getShop().getPieceNames().length; i++) {
+            shopPiecesListView.getItems().add(game.getShop().getPieceNames()[i] + " Piece");
+        }
+        for (int i = 0; i < game.getShop().getClickableNames().length; i++) {
+            shopClickablesListView.getItems().add(game.getShop().getClickableNames()[i]);
+        }
+        for (int i = 0; i < game.getShop().getStationNames().length; i++) {
+            shopStationListView.getItems().add(game.getShop().getStationNames()[i]);
+        }
+
+    }
 
     public void handleClick() {
         int gridSize = Integer.parseInt(selectGridSize.getValue())+2;
@@ -139,11 +172,14 @@ public class HelloController {
 
         updatePlayerListViews();
 
+        updateShop();
+
         playerTurnLabel.setText("Player Turn: "+ game.getPlayerTurn());
-        if(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece().equals(null)){
+
+        if (game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece() == null) {
             pieceSelectedLabel.setText("Select a Piece");
-        }else {
-            pieceSelectedLabel.setText(game.getPlayers()[game.getPlayerTurn() - 1].getSelectedPiece() + " is selected");
+        } else {
+            pieceSelectedLabel.setText(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece() + " is selected");
         }
 
         checkGameOver();
@@ -153,7 +189,9 @@ public class HelloController {
         playerClickableListView.getItems().clear();
 
         for (int j = 0; j < game.getPlayers()[game.getPlayerTurn()-1].getPieces().size(); j++) {
-            playerPiecesListView.getItems().add(game.getPlayers()[game.getPlayerTurn()-1].getPieces().get(j));
+            if(game.getPlayers()[game.getPlayerTurn()-1].getArsenal().get(j)>0){
+                playerPiecesListView.getItems().add(game.getPlayers()[game.getPlayerTurn()-1].getPieces().get(j) + " | Left: "+ game.getPlayers()[game.getPlayerTurn()-1].getArsenal().get(j));
+            }
         }
         for (int i = 0; i < game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size(); i++) {
             playerClickableListView.getItems().add("Bomb: "+game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().get(i).getRadius());
@@ -204,6 +242,10 @@ public class HelloController {
         winnerLabel.setText("");
         game.setGameOver(false);
 
+        resetGrid(actionEvent);
+    }
+
+    public void resetGrid(ActionEvent actionEvent) {
         for (int i = 0; i < btn.length; i++) {
             for (int j = 0; j < btn[0].length; j++) {
                 gpane.getChildren().remove(btn[i][j]);
@@ -213,6 +255,23 @@ public class HelloController {
         handleClick();
     }
 
-    public void resetGrid(ActionEvent actionEvent) {
+    public void buyPiece(ActionEvent actionEvent) {
+        int pieceBuying = shopPiecesListView.getSelectionModel().getSelectedIndex();
+        if(game.getShop().buyPiece(pieceBuying,game.getPlayers()[game.getWhoIsBuying()])){
+            purchaseLabel.setText("Successful Purchase");
+        }else{
+            purchaseLabel.setText("Insufficient Funds");
+        }
+    }
+
+    public void selectPlayerBuying(MouseEvent mouseEvent) {
+        int index = selectPlayerBuyingListView.getSelectionModel().getSelectedIndex();
+        game.selectWhoIsBuying(index+1);
+    }
+
+    public void selectPieceBuying(MouseEvent mouseEvent) {
+        int index = shopPiecesListView.getSelectionModel().getSelectedIndex();
+        buyPieceButton.setVisible(true);
+         buyPieceButton.setText("Buy "+ game.getShop().getPieceNames()[index] + " for " + game.getShop().getPiecePrices()[index] + " Credits?");
     }
 }

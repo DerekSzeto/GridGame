@@ -9,10 +9,20 @@ public class Game {
     private ArrayList<Station> stations = new ArrayList<>();
     private Player player1 = new Player("boi1");
     private Player player2 = new Player("boi2");
-    private Player[] players = new Player[2];
-
+    private Player[] players = {player1, player2};
+    private Shop shop = new Shop(players);
+    private int whoIsBuying;
     private boolean gameOver = false;
 
+    public void selectWhoIsBuying(int player){
+        whoIsBuying = player;
+    }
+    public int getWhoIsBuying(){
+        return whoIsBuying;
+    }
+    public Shop getShop(){
+        return shop;
+    }
     public void addPlayers(){
         players[0] = player1;
         players[1] = player2;
@@ -36,9 +46,6 @@ public class Game {
                     {5,4,4,4,4,4,4,4,4,4,4,5}
 
             };
-
-
-
 
     public void createBoard(int row, int col){
         tiles = new Tile[row][col];
@@ -66,8 +73,7 @@ public class Game {
         if(tiles[r][c].getValue()==4) {
             if(type.equals("Standard")) {
                 piecesShot.add(new Piece(r, c));
-            }
-            else if(type.equals("Paint")) {
+            } else if(type.equals("Paint")) {
                 piecesShot.add(0,new Paint(r, c,1));
             }else if(type.equals("Shadow")) {
                 piecesShot.add(0,new Shadow(r,c));
@@ -271,5 +277,10 @@ public class Game {
     public ArrayList<Station> getStations() {
         return stations;
     }
+    public void determineSpecialCond(){
 
+    }
+    public void spawnCapturePoints(){
+
+    }
 }

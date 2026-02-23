@@ -16,7 +16,7 @@ public class Virus extends Station{
                 }
             }
         }
-        for (int i = nearbyTiles.size()-1; i > 0; i--) {
+        for (int i = nearbyTiles.size()-1; i >= 0; i--) {
             if(nearbyTiles.get(i).getValue()==6||nearbyTiles.get(i).getValue()==4){
                 nearbyTiles.remove(i);
             }
