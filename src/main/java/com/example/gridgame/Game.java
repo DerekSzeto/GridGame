@@ -69,7 +69,7 @@ public class Game {
         return tiles;
     }
 
-    public void shootPiece(int r, int c, String type){
+    public void shootPiece(int r, int c, String type, int pieceIndex){
         if(tiles[r][c].getValue()==4) {
             if(type.equals("Standard")) {
                 piecesShot.add(new Piece(r, c));
@@ -90,6 +90,7 @@ public class Game {
                 piecesShot.add(0,new Spiral(r,c,2,playerTurn));
             }
             piecesShot.getFirst().setInitialDirection(r,c,tiles);
+            players[playerTurn-1].getArsenal().set(pieceIndex,players[playerTurn-1].getArsenal().get(pieceIndex)-1);
         }
     }
     public ArrayList<Piece> getPiecesShot(){
@@ -115,6 +116,16 @@ public class Game {
             }
         }
         return 0;
+    }
+    public void resetPlayerInventory(){
+        for (int i = 0; i < players.length; i++) {
+            for (int j = players[i].getPieces().size(); j > 0; j--) {
+                players[i].getPieces().remove(j);
+                players[i].getArsenal().remove(j);
+
+            }
+            players[i].getArsenal().set(0,99);
+        }
     }
     public boolean shootersLocked(){
         //not tested yet

@@ -58,7 +58,7 @@ public class HelloController {
         game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
     }
     private Game game = new Game();
-    
+
     public void updateShop(){
         selectPlayerBuyingListView.getItems().clear();
         shopPiecesListView.getItems().clear();
@@ -111,7 +111,9 @@ public class HelloController {
                 System.out.println("(" + row + "," + col + ")" + " Value: "+ game.getTiles()[row][col].getValue());
                 if(!game.isGameOver()) {
                     if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver() & game.getTiles()[row][col].getValue()==4) { //shoot
-                        game.shootPiece(row, col, game.getPlayers()[game.getPlayerTurn() - 1].getSelectedPiece());
+                        game.shootPiece(row, col, game.getPlayers()[game.getPlayerTurn() - 1].getSelectedPiece(),
+                                        game.getPlayers()[game.getPlayerTurn()-1].getPieces().indexOf(
+                                                game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece()));
                         game.activateStations();
                     } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
                         if (game.getPlayers()[game.getPlayerTurn() - 1].getPlayerBombs().size() >= 1) {
@@ -242,6 +244,7 @@ public class HelloController {
         winnerLabel.setText("");
         game.setGameOver(false);
 
+        game.resetPlayerInventory();
         resetGrid(actionEvent);
     }
 
@@ -257,21 +260,24 @@ public class HelloController {
 
     public void buyPiece(ActionEvent actionEvent) {
         int pieceBuying = shopPiecesListView.getSelectionModel().getSelectedIndex();
-        if(game.getShop().buyPiece(pieceBuying,game.getPlayers()[game.getWhoIsBuying()])){
+        if(game.getShop().buyPiece(pieceBuying,game.getPlayers()[game.getWhoIsBuying()-1])){
             purchaseLabel.setText("Successful Purchase");
         }else{
             purchaseLabel.setText("Insufficient Funds");
         }
+        updatePlayerListViews();
     }
 
     public void selectPlayerBuying(MouseEvent mouseEvent) {
         int index = selectPlayerBuyingListView.getSelectionModel().getSelectedIndex();
         game.selectWhoIsBuying(index+1);
+        playerBuyingLabel.setText("Player " + game.getWhoIsBuying() + " is buying");
     }
 
     public void selectPieceBuying(MouseEvent mouseEvent) {
         int index = shopPiecesListView.getSelectionModel().getSelectedIndex();
         buyPieceButton.setVisible(true);
-         buyPieceButton.setText("Buy "+ game.getShop().getPieceNames()[index] + " for " + game.getShop().getPiecePrices()[index] + " Credits?");
+        buyPieceButton.setText("Buy "+ game.getShop().getPieceNames()[index] + " for " + game.getShop().getPiecePrices()[index] + " Credits?");
+
     }
 }

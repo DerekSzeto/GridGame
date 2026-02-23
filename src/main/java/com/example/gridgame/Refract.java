@@ -7,6 +7,13 @@ public class Refract extends Piece{
         super(r,c);
         this.value = v;
     }
+    public int getCheckingValue(){
+        if(value == 1){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
     public void reflect(){
         //redirects to the opposite direction if the tile has the value of the opposite player
     }

@@ -19,6 +19,7 @@ public class Player {
         this.credits = 99;
         pieces.add("Standard");
         arsenal.add(99);
+
         //test
     }
     public void setSelectedPiece(int piece){

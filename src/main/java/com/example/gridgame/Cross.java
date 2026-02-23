@@ -58,7 +58,4 @@ public class Cross extends Piece{
         int centerIndex = ((1+dimension)/2)+1;
         activationPoints.add(tiles[centerIndex][centerIndex]);
     }
-    public String getMode(){
-        return mode;
-    }
 }

@@ -1,6 +1,43 @@
 package com.example.gridgame;
 
-public class Friction {
+public class Friction extends Piece{
     //martin idea and he said that the piece will only move a specific amount of tiles and then stop without reaching its end destination that it is supposed to reach
     //the friction is determined randomly
+    private int stoppingPower  = 0;
+    private int dimensions;
+    public Friction(int r, int c, int d){
+        super(r,c);
+        dimensions = d;
+    }
+    @Override
+    public void move(Tile[][] tiles){
+
+        int newRow = currentRow;
+        int newCol = currentCol;
+
+        if(direction.equals("right")){
+            newCol = currentCol+1;
+        }else if(direction.equals("left")){
+            newCol = currentCol-1;
+        }else if(direction.equals("up")){
+            newRow = currentRow-1;
+        }else if(direction.equals("down")){
+            newRow = currentRow+1;
+        }
+
+
+        if  (tiles[newRow][newCol].getValue() == 0){
+            currentCol = newCol;
+            currentRow = newRow;
+
+        }else if (tiles[newRow][newCol].getValue() > 0 || ){
+            canMove = false;
+        }
+
+
+    }
+    public boolean stopByFriction(){
+        int prob = (int)(Math.random()*dimensions);
+        if();
+    }
 }

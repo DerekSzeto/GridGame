@@ -22,24 +22,19 @@ public class Shop {
         for (int i = 0; i < piecesNames.length; i++) {
             pieces.add(piecesNames[i]);
         }
-        //add number of each piece for each player
-        for (int i = 0; i < players.length; i++) {
-            for (int j = 0; j < pieces.size(); j++) {
-                players[i].getPlayerPieces().add("");
-            }
-        }
-        for (int i = 0; i < players.length; i++) {
-            for (int j = 0; j < pieces.size(); j++) {
-                players[i].getArsenal().add(0);
-            }
-        }
     }
     public boolean buyPiece(int piece,Player player){
         String pieceBuying = pieces.get(piece);
         //use .contains to see if the piece is in there do not initialize arsenal and pieces
         if(player.getCredits()>=piecePrices[piece]){
-            player.getPieces().set((piece+1), pieceBuying);
-            player.getArsenal().set((piece+1),player.getArsenal().get(piece)+1) ;
+            if(player.getPieces().contains(pieceBuying)) {
+                player.getArsenal().set(player.getPieces().indexOf(pieceBuying),player.getArsenal().get(player.getPieces().indexOf(pieceBuying))+1) ;
+            }
+            else {
+                player.getPieces().add(pieceBuying);
+                player.getArsenal().add(1);
+            }
+
             player.setCredits(player.getCredits()-piecePrices[piece]);
             return true;
         }
