@@ -9,9 +9,17 @@ public class Wall {
     private int wallLength;
     private int startingRow;
     private int startingCol;
-    public Wall(String o,int numTiles, int r, int c){
+    public Wall(int l){
+        wallLength = l;
+    }
+    public void setOrientation(String o){
         orientation = o;
-        wallLength = numTiles;
+    }
+    public void setStartingRow(int r){
+        startingRow = r;
+    }
+    public void setStartingCol(int c){
+        startingCol = c;
     }
     public void constructWall(Tile[][] tiles){
         if(orientation.equals("h")) {
@@ -31,4 +39,7 @@ public class Wall {
         }
     }
 
+    public int getLength() {
+        return wallLength;
+    }
 }

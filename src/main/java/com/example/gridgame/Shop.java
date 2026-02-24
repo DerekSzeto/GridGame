@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class Shop {
-    private static String[] piecesNames = {"Shadow","Friction","Eraser","Paint","Zombie","Cross","Glitch","Refract","Rocket","Spiral"};
+    private static String[] piecesNames = {"Shadow","Friction","Eraser","Paint","Zombie","Cross","Glitch","Refract","Rocket","Spiral","Refract","Charge"};
     private static ArrayList<String> pieces = new ArrayList<>();
     private static int[] piecePrices = new int[piecesNames.length]; // <---- change ts later
     private static String[] piecesInfo = {
@@ -13,18 +13,25 @@ public class Shop {
     };
 
 
-    private static String[] clickableNames = {"Grenade","Bomb","Wall","Lock"};
-    private int[] clickablesStock = {3,5,4};
-    private static String[] stationNames = {"Void","Cloud","Sparkle"};
-    private static int[] stationPrices = {};
+    private static String[] clickableNames = {"Grenade","Bomb","Wall"};
+    private static int[] clickablePrices = {0,0,0};
+    private int[] clickablesStock = {(int)(Math.random() * 4) + 1 ,(int)(Math.random() * 4) + 1 ,(int)(Math.random() * 4) + 1 };
+    private static String[] stationNames = {"Void","Cloud","Smoke","Magnet","Recovery"};
+    private static int[] stationPrices = {0,0,0,0,0};
     public Shop(Player[] players){
         //need indexOf function
         for (int i = 0; i < piecesNames.length; i++) {
             pieces.add(piecesNames[i]);
         }
+        for (int i = 0; i < players.length; i++) {
+            for (int j = 0; j < stationNames.length; j++) {
+                players[i].getPlayerStations().add(stationNames[j]);
+                players[i].getStationCount().add(0);
+            }
+        }
     }
     public boolean buyPiece(int piece,Player player){
-        String pieceBuying = pieces.get(piece);
+        String pieceBuying = piecesNames[piece];
         //use .contains to see if the piece is in there do not initialize arsenal and pieces
         if(player.getCredits()>=piecePrices[piece]){
             if(player.getPieces().contains(pieceBuying)) {
@@ -41,6 +48,39 @@ public class Shop {
         return false;
 
     }
+    public boolean buyClickable(int index, Player player){
+        String clickableBuying = clickableNames[index];
+        if(player.getCredits()>=clickablePrices[index]) {
+            if (clickableBuying.equals("Grenade")) {
+                player.getPlayerBombs().add(new Bomb(1));
+            } else if (clickableBuying.equals("Bomb")) {
+                int nukeChance = (int)((Math.random()*10)+1);
+                int radius;
+                if(nukeChance==1){
+                    radius = 3;
+                }else{
+                    radius = 2;
+                }
+                player.getPlayerBombs().add(new Bomb(radius));
+            }else{
+                int lengthLuck = (int)(Math.random() * (36 - 9 + 1)) + 9;
+                int length = (int)(Math.sqrt(lengthLuck));
+                player.getPlayerWalls().add(new Wall(length));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean buyStation(int stationBuying,Player player){
+        if(player.getCredits()>=stationPrices[stationBuying]){
+            player.getStationCount().set(stationBuying,player.getStationCount().get(stationBuying)+1);
+            player.setCredits(player.getCredits()-stationPrices[stationBuying]);
+            return true;
+        }
+        return false;
+
+    }
     public String getPieceInfo(int selectedPiece){
         return piecesInfo[selectedPiece];
     }
@@ -52,6 +92,9 @@ public class Shop {
     }
     public String[] getClickableNames(){
         return clickableNames;
+    }
+    public int[] getClickablePrices(){
+        return clickablePrices;
     }
     public int[] getClickablesStock(){
         return clickablesStock;

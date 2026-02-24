@@ -39,12 +39,16 @@ public class HelloController {
     public Label playerBuyingLabel;
     public Label purchaseLabel;
     public Button buyPieceButton;
+    public Button buyClickableButton;
+    public Button buyStationButton;
+    public Label warningLabel;
+    public Label stationSelectedLabel;
 
     private Button[][] btn;
     public void initialize(){
         //test get rid of this after
 
-        selectGridSize.getItems().addAll("8", "9", "10","11","16","17");
+        selectGridSize.getItems().addAll("10","11","24","25");
         selectGridSize.setValue("10");
 
 
@@ -78,7 +82,6 @@ public class HelloController {
         for (int i = 0; i < game.getShop().getStationNames().length; i++) {
             shopStationListView.getItems().add(game.getShop().getStationNames()[i]);
         }
-
     }
 
     public void handleClick() {
@@ -110,15 +113,30 @@ public class HelloController {
                 int col = GridPane.getColumnIndex(clicked);
                 System.out.println("(" + row + "," + col + ")" + " Value: "+ game.getTiles()[row][col].getValue());
                 if(!game.isGameOver()) {
-                    if (event.getButton() == MouseButton.PRIMARY & !game.isGameOver() & game.getTiles()[row][col].getValue()==4) { //shoot
-                        game.shootPiece(row, col, game.getPlayers()[game.getPlayerTurn() - 1].getSelectedPiece(),
-                                        game.getPlayers()[game.getPlayerTurn()-1].getPieces().indexOf(
-                                                game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece()));
-                        game.activateStations();
-                    } else if (event.getButton() == MouseButton.SECONDARY) { //clickables
-                        if (game.getPlayers()[game.getPlayerTurn() - 1].getPlayerBombs().size() >= 1) {
+                    Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
+                    int value = game.getTiles()[row][col].getValue();
+                    if (event.getButton() == MouseButton.PRIMARY & value==4) {//shoot
+                        if(currentPlayer.getArsenal().get(currentPlayer.getPieces().indexOf(currentPlayer.getSelectedPiece()))>0) {
+                            game.shootPiece(row, col, currentPlayer.getSelectedPiece(),
+                                    currentPlayer.getPieces().indexOf(currentPlayer.getSelectedPiece()));
+
+                            game.activateStations();
+                        }else{
+                            warningLabel.setText("You have no more of this piece");
+                        }
+                    } else if (event.getButton() == MouseButton.SECONDARY & value==0) { //clickables
+                        if (currentPlayer.getPlayerBombs().size() >= 1) {
                             game.useBomb(game.getPlayerTurn() - 1, row, col);
                             System.out.println("used bomb");
+                        }
+                    } else if(event.getButton() == MouseButton.MIDDLE && value==0) {
+                        if(currentPlayer.getStationCount().get(currentPlayer.getPlayerStations().indexOf(currentPlayer.getSelectedStation()))>0){
+                            System.out.println("middle");
+                            game.spawnStation(row,col,currentPlayer.getSelectedStation());
+
+                            game.activateStations();
+                        }else{
+                            warningLabel.setText("You have no more of this piece");
                         }
                     }
                     updateScreen();
@@ -151,13 +169,15 @@ public class HelloController {
                 else if (game.getTiles()[i][j].getValue() == 4|game.getTiles()[i][j].getValue() == 1){
                     btn[i][j].setStyle("-fx-background-color: magenta");
                 }else if(game.getTiles()[i][j].getValue() == 6){
-                    btn[i][j].setStyle("-fx-background-color: olive");
+                    btn[i][j].setStyle("-fx-background-color: olive"); // virus
                 }else if(game.getTiles()[i][j].getValue() == 7){
-                    btn[i][j].setStyle("-fx-background-color: goldenrod");
+                    btn[i][j].setStyle("-fx-background-color: goldenrod"); // Magnet
                 }else if(game.getTiles()[i][j].getValue() == 9){
-                    btn[i][j].setStyle("-fx-background-color: crimson");
+                    btn[i][j].setStyle("-fx-background-color: crimson"); // wall
                 }else if(game.getTiles()[i][j].getValue() == 10){
-                    btn[i][j].setStyle("-fx-background-color: black");
+                    btn[i][j].setStyle("-fx-background-color: black"); // void
+                }else if(game.getTiles()[i][j].getValue() == 11){
+                    btn[i][j].setStyle("-fx-background-color: grey"); // smoke
                 }
             }
         }
@@ -178,10 +198,15 @@ public class HelloController {
 
         playerTurnLabel.setText("Player Turn: "+ game.getPlayerTurn());
 
-        if (game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece() == null) {
+        Player currentPlayer =  game.getPlayers()[game.getPlayerTurn()-1];
+        if (currentPlayer.getSelectedPiece() == null) {
             pieceSelectedLabel.setText("Select a Piece");
         } else {
-            pieceSelectedLabel.setText(game.getPlayers()[game.getPlayerTurn()-1].getSelectedPiece() + " is selected");
+            pieceSelectedLabel.setText(currentPlayer.getSelectedPiece() + " is selected");
+        }
+
+        if (currentPlayer.getSelectedStation() != null) {
+            stationSelectedLabel.setText(currentPlayer.getSelectedStation() + " is selected");
         }
 
         checkGameOver();
@@ -189,14 +214,24 @@ public class HelloController {
     public void updatePlayerListViews(){
         playerPiecesListView.getItems().clear();
         playerClickableListView.getItems().clear();
+        playerStationsListView.getItems().clear();
+        Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
+        for (int j = 0; j < currentPlayer.getPieces().size(); j++) {
+            playerPiecesListView.getItems().add(currentPlayer.getPieces().get(j) + " | Left: "+ currentPlayer.getArsenal().get(j));
 
-        for (int j = 0; j < game.getPlayers()[game.getPlayerTurn()-1].getPieces().size(); j++) {
-            if(game.getPlayers()[game.getPlayerTurn()-1].getArsenal().get(j)>0){
-                playerPiecesListView.getItems().add(game.getPlayers()[game.getPlayerTurn()-1].getPieces().get(j) + " | Left: "+ game.getPlayers()[game.getPlayerTurn()-1].getArsenal().get(j));
+        }
+        for (int i = 0; i < currentPlayer.getPlayerBombs().size(); i++) {
+            if(currentPlayer.getPlayerBombs().get(i).getRadius()==1){
+                playerClickableListView.getItems().add("Grenade: "+currentPlayer.getPlayerBombs().get(i).getRadius());
+            }else{
+                playerClickableListView.getItems().add("Bomb: "+currentPlayer.getPlayerBombs().get(i).getRadius());
             }
         }
-        for (int i = 0; i < game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().size(); i++) {
-            playerClickableListView.getItems().add("Bomb: "+game.getPlayers()[game.getPlayerTurn()-1].getPlayerBombs().get(i).getRadius());
+        for (int i = 0; i < currentPlayer.getPlayerWalls().size(); i++) {
+            playerClickableListView.getItems().add("Wall: " +currentPlayer.getPlayerWalls().get(i).getLength());
+        }
+        for (int i = 0; i < currentPlayer.getPlayerStations().size(); i++) {
+            playerStationsListView.getItems().add(currentPlayer.getPlayerStations().get(i) + " | Left: "+ currentPlayer.getStationCount().get(i));
         }
 
     }
@@ -210,7 +245,6 @@ public class HelloController {
                 winnerLabel.setText("Tie");
             }
         }
-
     }
     public void handleTimer() {
         new AnimationTimer(){
@@ -265,19 +299,87 @@ public class HelloController {
         }else{
             purchaseLabel.setText("Insufficient Funds");
         }
-        updatePlayerListViews();
+        disableShopButtons();
+        clearSelection();
     }
 
     public void selectPlayerBuying(MouseEvent mouseEvent) {
-        int index = selectPlayerBuyingListView.getSelectionModel().getSelectedIndex();
-        game.selectWhoIsBuying(index+1);
+        int player = selectPlayerBuyingListView.getSelectionModel().getSelectedIndex();
+        game.selectWhoIsBuying(player+1);
         playerBuyingLabel.setText("Player " + game.getWhoIsBuying() + " is buying");
     }
 
     public void selectPieceBuying(MouseEvent mouseEvent) {
-        int index = shopPiecesListView.getSelectionModel().getSelectedIndex();
+        disableShopButtons();
+        buyPieceButton.setDisable(false);
+        int pieceBuying = shopPiecesListView.getSelectionModel().getSelectedIndex();
         buyPieceButton.setVisible(true);
-        buyPieceButton.setText("Buy "+ game.getShop().getPieceNames()[index] + " for " + game.getShop().getPiecePrices()[index] + " Credits?");
+        buyPieceButton.setText("Buy "+ game.getShop().getPieceNames()[pieceBuying] + " for " + game.getShop().getPiecePrices()[pieceBuying] + " Credits?");
+
+    }
+
+    public void selectStation(MouseEvent mouseEvent) {
+        game.getPlayers()[game.getPlayerTurn()-1].setSelectedStation(playerStationsListView.getSelectionModel().getSelectedIndex());
+        updateScreen();
+    }
+
+    public void selectClickable(MouseEvent mouseEvent) {
+    }
+
+    public void buyClickable(ActionEvent actionEvent) {
+        int clickBuying = shopClickablesListView.getSelectionModel().getSelectedIndex();
+        if(game.getShop().buyClickable(clickBuying,game.getPlayers()[game.getWhoIsBuying()-1])){
+            purchaseLabel.setText("Successful Purchase");
+        }else{
+            purchaseLabel.setText("Insufficient Funds");
+        }
+        disableShopButtons();
+        clearSelection();
+    }
+
+    public void buyStation(ActionEvent actionEvent) {
+        int stationBuying = shopStationListView.getSelectionModel().getSelectedIndex();
+        if(game.getShop().buyStation(stationBuying,game.getPlayers()[game.getWhoIsBuying()-1])){
+            purchaseLabel.setText("Successful Purchase");
+        }else{
+            purchaseLabel.setText("Insufficient Funds");
+        }
+        disableShopButtons();
+        clearSelection();
+    }
+
+    public void selectClickableBuying(MouseEvent mouseEvent) {
+        disableShopButtons();
+        buyClickableButton.setDisable(false);
+        int clickBuying = shopClickablesListView.getSelectionModel().getSelectedIndex();
+
+        buyClickableButton.setVisible(true);
+        buyClickableButton.setText("Buy "+ game.getShop().getClickableNames()[clickBuying] + " for " + game.getShop().getClickablePrices()[clickBuying] + " Credits?");
+
+    }
+
+    public void selectStationBuying(MouseEvent mouseEvent) {
+        disableShopButtons();
+        buyStationButton.setDisable(false);
+        int stationBuying = shopStationListView.getSelectionModel().getSelectedIndex();
+        buyStationButton.setVisible(true);
+        buyStationButton.setText("Buy "+ game.getShop().getStationNames()[stationBuying] + " for " + game.getShop().getStationPrices()[stationBuying] + " Credits?");
+    }
+    public void disableShopButtons() {
+        buyStationButton.setDisable(true);
+        buyPieceButton.setDisable(true);
+        buyClickableButton.setDisable(true);
+
+        updatePlayerListViews();
+
+    }
+    public void clearSelection(){
+        shopPiecesListView.getSelectionModel().clearSelection();
+        shopClickablesListView.getSelectionModel().clearSelection();
+        shopStationListView.getSelectionModel().clearSelection();
+    }
+
+    public void selectOrientation(MouseEvent mouseEvent) {
 
     }
 }

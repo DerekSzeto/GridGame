@@ -7,7 +7,7 @@ public class Friction extends Piece{
     private int dimensions;
     public Friction(int r, int c, int d){
         super(r,c);
-        dimensions = d;
+        dimensions = d-2;
     }
     @Override
     public void move(Tile[][] tiles){
@@ -29,15 +29,21 @@ public class Friction extends Piece{
         if  (tiles[newRow][newCol].getValue() == 0){
             currentCol = newCol;
             currentRow = newRow;
-
-        }else if (tiles[newRow][newCol].getValue() > 0 || ){
+            stoppingPower++;
+        }else if (tiles[newRow][newCol].getValue() > 0 || stopByFriction()){
             canMove = false;
         }
 
 
     }
-    public boolean stopByFriction(){
-        int prob = (int)(Math.random()*dimensions);
-        if();
+    public boolean stopByFriction() {
+        if (stoppingPower < 0) {stoppingPower = 0;
+        }
+
+        int prob = (int)(Math.random() * dimensions);
+        if (prob < stoppingPower) {
+            return true;
+        }
+        return false;
     }
 }

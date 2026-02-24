@@ -69,25 +69,27 @@ public class Game {
         return tiles;
     }
 
-    public void shootPiece(int r, int c, String type, int pieceIndex){
+    public void shootPiece(int r, int c, String pieceName, int pieceIndex){
         if(tiles[r][c].getValue()==4) {
-            if(type.equals("Standard")) {
+            if(pieceName.equals("Standard")) {
                 piecesShot.add(new Piece(r, c));
-            } else if(type.equals("Paint")) {
+            } else if(pieceName.equals("Paint")) {
                 piecesShot.add(0,new Paint(r, c,1));
-            }else if(type.equals("Shadow")) {
+            }else if(pieceName.equals("Shadow")) {
                 piecesShot.add(0,new Shadow(r,c));
-            }else if(type.equals("Rocket")){
+            }else if(pieceName.equals("Rocket")){
                 piecesShot.add(0,new Rocket(r,c));
-            }else if(type.equals("Eraser")){
+            }else if(pieceName.equals("Eraser")){
                 piecesShot.add(0,new Eraser(r,c));
-            }else if(type.equals("Zombie")){
+            }else if(pieceName.equals("Zombie")){
                 piecesShot.add(0,new Zombie(r,c,playerTurn));
-            }else if(type.equals("Cross")){
+            }else if(pieceName.equals("Cross")){
                 piecesShot.add(0,new Cross(r,c,"color"));
                 ((Cross) piecesShot.getFirst()).determineActivationPoints(tiles);
-            }else if(type.equals("Spiral")){
+            }else if(pieceName.equals("Spiral")){
                 piecesShot.add(0,new Spiral(r,c,2,playerTurn));
+            } else if (pieceName.equals("Friction")) {
+                piecesShot.add(0,new Friction(r,c,tiles.length));
             }
             piecesShot.getFirst().setInitialDirection(r,c,tiles);
             players[playerTurn-1].getArsenal().set(pieceIndex,players[playerTurn-1].getArsenal().get(pieceIndex)-1);
@@ -226,8 +228,19 @@ public class Game {
     }
 
     public void useBomb(int player, int r, int c) {
-        players[player].getPlayerBombs().getFirst().explode(r,c,tiles);
+        Player playerWhoBombed = players[player];
+        playerWhoBombed.getPlayerBombs().getFirst().explode(r,c,tiles);
+
+        for (int i = stations.size()-1; i >= 0 ; i--) {
+            for (int j = 0; j < playerWhoBombed.getPlayerBombs().getFirst().getExplodedArea().size(); j++) {
+                if(stations.get(i).getRow()==playerWhoBombed.getPlayerBombs().getFirst().getExplodedArea().get(j).getRow() && stations.get(i).getCol() ==playerWhoBombed.getPlayerBombs().getFirst().getExplodedArea().get(j).getCol() ){
+                    stations.remove(i);
+                }
+            }
+        }
+
         players[player].getPlayerBombs().removeFirst();
+
         switchPlayer();
     }
     public void rocketTrail(){
@@ -269,7 +282,12 @@ public class Game {
 
     }
     public void activateStations() {
-        virus();
+//        virus();
+        for (int i = 0; i < stations.size(); i++) {
+            if(stations.get(i) instanceof Magnet){
+               ((Magnet) stations.get(i)).repel(tiles,piecesShot);
+            }
+        }
     }
     public void virus(){
         int virusCount = 0;
@@ -293,5 +311,11 @@ public class Game {
     }
     public void spawnCapturePoints(){
 
+    }
+    public void spawnStation(int r, int c,String stationName){
+        if(stationName.equals("Magnet")){
+            stations.add(new Magnet(r,c,playerTurn,1));
+            tiles[r][c].setValue(7);
+        }
     }
 }
