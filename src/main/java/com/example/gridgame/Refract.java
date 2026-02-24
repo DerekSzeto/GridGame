@@ -14,7 +14,46 @@ public class Refract extends Piece{
             return 1;
         }
     }
+    public void move(Tile[][] tiles){
+
+        int newRow = currentRow;
+        int newCol = currentCol;
+
+        if(direction.equals("right")){
+            newCol = currentCol+1;
+        }else if(direction.equals("left")){
+            newCol = currentCol-1;
+        }else if(direction.equals("up")){
+            newRow = currentRow-1;
+        }else if(direction.equals("down")){
+            newRow = currentRow+1;
+        }
+
+
+        if  (tiles[newRow][newCol].getValue() == 0){
+            currentCol = newCol;
+            currentRow = newRow;
+        }else if (tiles[newRow][newCol].getValue() > 0){
+            if(tiles[newRow][newCol].getValue() == value){
+                refract();
+                canMove = false;
+            }else if(tiles[newRow][newCol].getValue() == getCheckingValue()){
+                reflect();
+            }
+        }
+
+
+    }
+    public void refract(){
+
+    }
     public void reflect(){
         //redirects to the opposite direction if the tile has the value of the opposite player
+    }
+    public void getDiagonals(){
+
+    }
+    public void reflection(){
+
     }
 }

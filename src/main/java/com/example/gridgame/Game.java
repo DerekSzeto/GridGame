@@ -123,11 +123,13 @@ public class Game {
         for (int i = 0; i < players.length; i++) {
             for (int j = players[i].getPieces().size(); j > 0; j--) {
                 players[i].getPieces().remove(j);
+                players[i].getStationCount().set(j,0);
                 players[i].getArsenal().remove(j);
-
             }
-            players[i].getArsenal().set(0,99);
+            players[i].getPieces().add(0,"Standard");
+            players[i].getArsenal().add(0,99);
         }
+
     }
     public boolean shootersLocked(){
         //not tested yet
@@ -287,7 +289,11 @@ public class Game {
             if(stations.get(i) instanceof Magnet){
                ((Magnet) stations.get(i)).repel(tiles,piecesShot);
             }
+            if(stations.get(i) instanceof Void){
+//                ((Void) ((Void) stations.get(i)).deletion();)
+            }
         }
+
     }
     public void virus(){
         int virusCount = 0;
@@ -316,6 +322,27 @@ public class Game {
         if(stationName.equals("Magnet")){
             stations.add(new Magnet(r,c,playerTurn,1));
             tiles[r][c].setValue(7);
+        }else if(stationName.equals("Void")){
+            stations.add(new Void(r,c,playerTurn));
+            tiles[r][c].setValue(10);
+        }else if(stationName.equals("Recovery")){
+            stations.add(new Recovery(r,c,playerTurn,tiles));
         }
     }
+    public boolean isThereVoid(){
+        for (int i = 0; i < stations.size(); i++) {
+            if(stations.get(i) instanceof Void){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void voiding(){
+        for (int i = 0; i < stations.size(); i++) {
+            if(stations.get(i) instanceof Void){
+//                ((Void) ((Void) stations.get(i)).deflect();
+            }
+        }
+    }
+
 }

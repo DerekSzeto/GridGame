@@ -35,7 +35,7 @@ public class Void extends Station{
         //this should decide what pieces to pull closer to the void station
     }
     public void deflect(Piece piece){
-        ;
+        ;//fix this at home
         if(piece.getDirection().equals("left")) {
             piece.setDirection("right");
         }else if(piece.getDirection().equals("right")){

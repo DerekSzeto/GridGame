@@ -46,9 +46,6 @@ public class Player {
     public String getSelectedPiece(){
         return selectedPiece;
     }
-    public ArrayList<String> getPlayerPieces(){
-        return pieces;
-    }
     public ArrayList<Integer> getArsenal(){
         return arsenal;
     }

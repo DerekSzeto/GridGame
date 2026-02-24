@@ -5,39 +5,41 @@ import java.util.ArrayList;
 public class Magnet extends Station{
     private String mode;
     private int strength;
-    public Magnet(int r,int c, int v, int str){
+    private int reach;
+    public Magnet(int r,int c, int v, int str, int reach){
         super(r,c,v);
         strength = str;
+        this.reach = reach;
     }
     public void ring(Tile[][] tiles){
 
-
-            ArrayList<Tile> borderingTiles = new ArrayList<>();
-            int[] dr = {
-                    -2,-2,-2,-2,-2,
-                    -1,        -1,
-                    0,         0,
-                    1,         1,
-                    2, 2, 2, 2, 2
-            };
-
-            int[] dc = {
-                    -2,-1, 0, 1, 2,
-                    -2,        2,
-                    -2,        2,
-                    -2,        2,
-                    -2,-1, 0, 1, 2
-            };
-
-            for (int k = 0; k < dr.length; k++) {
-                int rr = row + dr[k];
-                int cc = col + dc[k];
-
-                // follow your bounds (skips edges)
-                if (rr > 0 && rr < tiles.length - 1 && cc > 0 && cc < tiles[rr].length - 1) {
-                    borderingTiles.add(tiles[rr][cc]);
-                }
-            }
+//
+//            ArrayList<Tile> borderingTiles = new ArrayList<>();
+//            int[] dr = {
+//                    -2,-2,-2,-2,-2,
+//                    -1,        -1,
+//                    0,         0,
+//                    1,         1,
+//                    2, 2, 2, 2, 2
+//            };
+//
+//            int[] dc = {
+//                    -2,-1, 0, 1, 2,
+//                    -2,        2,
+//                    -2,        2,
+//                    -2,        2,
+//                    -2,-1, 0, 1, 2
+//            };
+//
+//            for (int k = 0; k < dr.length; k++) {
+//                int rr = row + dr[k];
+//                int cc = col + dc[k];
+//
+//                // follow your bounds (skips edges)
+//                if (rr > 0 && rr < tiles.length - 1 && cc > 0 && cc < tiles[rr].length - 1) {
+//                    borderingTiles.add(tiles[rr][cc]);
+//                }
+//            }
     }
     public void repel(Tile[][] tiles, ArrayList<Piece> piecesShot) {
 
