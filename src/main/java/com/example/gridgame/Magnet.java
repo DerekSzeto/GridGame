@@ -20,14 +20,13 @@ public class Magnet extends Station{
         for (int i = leftBound; i < rightBound; i++) {
             for (int j = leftBound; j < rightBound; j++) {
 
-                if (!(i == 0 && j == 0)) {
+                if (i != 0 || j != 0) {
 
                     int nRow = row + i;
                     int nCol = col + j;
 
                     if (nRow > 0 && nRow < tiles.length - 1 && nCol > 0 && nCol < tiles[nRow].length - 1) {
                         int v = tiles[nRow][nCol].getValue();
-
                         if (v != 0 && v < 4 && v == determineMovingTiles()) {
 
                             int directionH = determineDistance(i);
@@ -36,12 +35,12 @@ public class Magnet extends Station{
                             int finalRow = nRow + directionH * strength;
                             int finalCol = nCol + directionV * strength;
 
-                            // only spawn a mover if the destination 1 step away is empty and in-bounds
+
                             if (finalRow > 0 && finalRow < tiles.length - 1 &&
                                     finalCol > 0 && finalCol < tiles[finalRow].length - 1 &&
                                     tiles[finalRow][finalCol].getValue() == 0) {
+                                tiles[nRow][nCol].setValue(0);
 
-                                tiles[nRow][nCol].setValue(0); // remove from source
                                 if(mode.equals("repel")) {
                                     piecesShot.add(0, new ManipulatedPiece(nRow, nCol, directionH, directionV, v));
                                 }else{

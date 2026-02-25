@@ -131,6 +131,9 @@ public class Rocket extends Piece{
 
     }
     public void trail(Tile[][] tiles){
-        tiles[currentRow][currentCol].setValue(5);
+        int prob = (int)(Math.random()*2);
+        if(prob == 0) {
+            tiles[currentRow][currentCol].setValue(5);
+        }
     }
 }

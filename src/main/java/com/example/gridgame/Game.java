@@ -108,6 +108,37 @@ public class Game {
             playerTurn = 1;
         }
     }
+    public void earnCredit(int player) {
+        Player currentPlayer = players[playerTurn - 1];
+
+        for (int i = 1; i < tiles.length - 1; i++) {
+            int count = 0;
+
+            for (int j = 1; j < tiles[i].length - 1; j++) {
+                if (tiles[i][j].getValue() == player) {
+                    count++;
+                    if (count >= 2) {
+                        currentPlayer.setCredits(currentPlayer.getCredits() + 1);
+                    }
+                } else {
+                    count = 0;
+                }
+            }
+        }
+        for (int j = 1; j < tiles[0].length - 1; j++) {
+            int count = 0;
+            for (int i = 1; i < tiles.length - 1; i++) {
+                if (tiles[i][j].getValue() == player) {
+                    count++;
+                    if (count >= 2) {
+                        currentPlayer.setCredits(currentPlayer.getCredits() + 1);
+                    }
+                } else {
+                    count = 0;
+                }
+            }
+        }
+    }
     public int checkGameOver(){
         for (int i = 1; i < 3; i++) {
             if (patternOf5(i)) {

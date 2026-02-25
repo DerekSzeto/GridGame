@@ -1,5 +1,7 @@
 package com.example.gridgame;
 
+import java.util.ArrayList;
+
 public class Refract extends Piece{
     private int value;
     // The piece must collide with a piece of the same color, if the tile the piece collides with has an adjacent of the same color, the piece will make the adjacent piece move towards other pieces of the same color
@@ -35,7 +37,7 @@ public class Refract extends Piece{
             currentRow = newRow;
         }else if (tiles[newRow][newCol].getValue() > 0){
             if(tiles[newRow][newCol].getValue() == value){
-                refract();
+                refract(tiles);
                 canMove = false;
             }else if(tiles[newRow][newCol].getValue() == getCheckingValue()){
                 reflect();
@@ -44,23 +46,29 @@ public class Refract extends Piece{
 
 
     }
-    public void refract(){
+    public void refract(Tile[][] tiles){
+        ArrayList<Tile> diagonals = getDiagonals(tiles);
+        for (int i = 0; i < diagonals.size(); i++) {
+            if(diagonals.get(i).getValue() == getCheckingValue()){
 
+            }
+        }
     }
     public void reflect(){
         //redirects to the opposite direction if the tile has the value of the opposite player
     }
-    public void getDiagonals(){
-        for (int i = leftBound; i < rightBound; i++) {
-            for (int j = leftBound; j < rightBound; j++) {
-                if ((r + i) > 0 && (r + i) < tiles.length-1 && (c + j) > 0 && (c + j) < tiles[r + i].length-1) {
-                    if(tiles[r+i][c+j].getValue()!=value&tiles[r+i][c+j].getValue()!=4&tiles[r+i][c+j].getValue()!=value&tiles[r+i][c+j].getValue()!=0) {
-                        System.out.println("painted x2");
-                        tiles[r + i][c + j].setValue(value);
+    public ArrayList<Tile> getDiagonals(Tile[][] tiles){
+        ArrayList<Tile> diagonals = new ArrayList<>();
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if (i != 0 && j != 0) {
+                    if (currentRow + i > 0 && currentRow + i < tiles.length - 1 && currentCol + j > 0 && currentCol + j < tiles[currentRow + i].length - 1) {
+                        diagonals.add(tiles[currentRow + i][currentCol + j]);
                     }
                 }
             }
         }
+        return diagonals;
     }
     public void reflection(){
         //same tile moves back, makes other same tile move as well, mirrored movment

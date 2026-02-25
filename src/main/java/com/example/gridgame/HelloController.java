@@ -43,6 +43,8 @@ public class HelloController {
     public ListView playerBombListView;
     public ListView wallOrientationListView;
     public ListView playerWallListView;
+    public Label player1CreditLabel;
+    public Label player2CreditLabel;
 
     private Button[][] btn;
     public void initialize(){
@@ -200,6 +202,8 @@ public class HelloController {
 
         updateShop();
 
+        player1CreditLabel.setText("Player 1's Credits: " + game.getPlayers()[0].getCredits());
+        player2CreditLabel.setText("Player 2's Credits: " + game.getPlayers()[1].getCredits());
         playerTurnLabel.setText("Player Turn: "+ game.getPlayerTurn());
 
         Player currentPlayer =  game.getPlayers()[game.getPlayerTurn()-1];
