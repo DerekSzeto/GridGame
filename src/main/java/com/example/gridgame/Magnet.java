@@ -6,48 +6,19 @@ public class Magnet extends Station{
     private String mode;
     private int strength;
     private int reach;
-    public Magnet(int r,int c, int v, int str, int reach){
+    public Magnet(int r,int c, int v, int str, int reach, String mode){
         super(r,c,v);
         strength = str;
         this.reach = reach;
+        this.mode = mode; //attract or repel
     }
-    public void ring(Tile[][] tiles){
+    public void manipulatePieces(Tile[][] tiles, ArrayList<Piece> piecesShot) {
 
-//
-//            ArrayList<Tile> borderingTiles = new ArrayList<>();
-//            int[] dr = {
-//                    -2,-2,-2,-2,-2,
-//                    -1,        -1,
-//                    0,         0,
-//                    1,         1,
-//                    2, 2, 2, 2, 2
-//            };
-//
-//            int[] dc = {
-//                    -2,-1, 0, 1, 2,
-//                    -2,        2,
-//                    -2,        2,
-//                    -2,        2,
-//                    -2,-1, 0, 1, 2
-//            };
-//
-//            for (int k = 0; k < dr.length; k++) {
-//                int rr = row + dr[k];
-//                int cc = col + dc[k];
-//
-//                // follow your bounds (skips edges)
-//                if (rr > 0 && rr < tiles.length - 1 && cc > 0 && cc < tiles[rr].length - 1) {
-//                    borderingTiles.add(tiles[rr][cc]);
-//                }
-//            }
-    }
-    public void repel(Tile[][] tiles, ArrayList<Piece> piecesShot) {
+        int leftBound = -1 * reach;
+        int rightBound = 1 + reach;
 
-        int leftBound = -1 * strength;
-        int rightBound = 1 + strength;
-
-        for (int i = leftBound; i <= rightBound; i++) {
-            for (int j = -2; j <= 2; j++) {
+        for (int i = leftBound; i < rightBound; i++) {
+            for (int j = leftBound; j < rightBound; j++) {
 
                 if (!(i == 0 && j == 0)) {
 
@@ -57,20 +28,13 @@ public class Magnet extends Station{
                     if (nRow > 0 && nRow < tiles.length - 1 && nCol > 0 && nCol < tiles[nRow].length - 1) {
                         int v = tiles[nRow][nCol].getValue();
 
-                        if (v != 0 && v != 4) {
+                        if (v != 0 && v < 4 && v == determineMovingTiles()) {
 
-                            int directionH;
-                            if (i > 0) directionH = 1;
-                            else if (i < 0) directionH = -1;
-                            else directionH = 0;
+                            int directionH = determineDistance(i);
+                            int directionV = determineDistance(j);
 
-                            int directionV;
-                            if (j > 0) directionV = 1;
-                            else if (j < 0) directionV = -1;
-                            else directionV = 0;
-
-                            int finalRow = nRow + directionH;
-                            int finalCol = nCol + directionV;
+                            int finalRow = nRow + directionH * strength;
+                            int finalCol = nCol + directionV * strength;
 
                             // only spawn a mover if the destination 1 step away is empty and in-bounds
                             if (finalRow > 0 && finalRow < tiles.length - 1 &&
@@ -78,12 +42,49 @@ public class Magnet extends Station{
                                     tiles[finalRow][finalCol].getValue() == 0) {
 
                                 tiles[nRow][nCol].setValue(0); // remove from source
-                                piecesShot.add(0, new RepelledPiece(nRow, nCol, directionH, directionV, v));
+                                if(mode.equals("repel")) {
+                                    piecesShot.add(0, new ManipulatedPiece(nRow, nCol, directionH, directionV, v));
+                                }else{
+                                    piecesShot.add(0, new ManipulatedPiece(nRow, nCol, -directionH, -directionV, v));
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+    public int determineDistance(int index){
+        int direction;
+        if (index > 0) {
+            direction = 1;
+        } else if (index < 0) {
+            direction = -1;
+        } else {
+            direction = 0;
+        }
+        return direction;
+    }
+    public int determineMovingTiles(){
+
+        if(mode.equals("repel")) {
+            return getCheckingValue();
+        }else{
+            return value;
+        }
+    }
+    public int getCheckingValue(){
+        if(value==1){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+    public void alternateModes(){
+        if(mode.equals("repel")){
+            mode = "attract";
+        }else{
+            mode = "repel";
         }
     }
 }

@@ -27,17 +27,22 @@ public class Friction extends Piece{
 
 
         if  (tiles[newRow][newCol].getValue() == 0){
-            currentCol = newCol;
-            currentRow = newRow;
-            stoppingPower++;
-        }else if (tiles[newRow][newCol].getValue() > 0 || stopByFriction()){
+            if(stopByFriction()){
+                canMove = false;
+            }else {
+                currentCol = newCol;
+                currentRow = newRow;
+                stoppingPower++;
+            }
+        }else if (tiles[newRow][newCol].getValue() > 0){
             canMove = false;
         }
 
 
     }
     public boolean stopByFriction() {
-        if (stoppingPower < 0) {stoppingPower = 0;
+        if (stoppingPower < 0) {
+            stoppingPower = 0;
         }
 
         int prob = (int)(Math.random() * dimensions);

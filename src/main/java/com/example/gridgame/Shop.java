@@ -16,8 +16,12 @@ public class Shop {
     private static String[] clickableNames = {"Grenade","Bomb","Wall"};
     private static int[] clickablePrices = {0,0,0};
     private int[] clickablesStock = {(int)(Math.random() * 4) + 1 ,(int)(Math.random() * 4) + 1 ,(int)(Math.random() * 4) + 1 };
+    private static String[] clickableInfo = {"Detonates on use, clearing all pieces and obstacles in the eight surrounding tiles (1-tile radius) while leaving the center tile intact."
+    ,"Upon activation, this device clears all pieces and obstacles within an extended radius, affecting a significantly larger area than the standard shockwave item. Its wide-range effect makes it strategically valuable for disrupting clustered formations and shifting board control."
+    ,"When placed, this structure automatically extends outward in a straight line from the placement tile, building horizontally from left to right and vertically from top to bottom according to its orientation. The wall continues constructing until it reaches the board boundary or an occupied tile, creating a continuous barrier that can block movement and control space."};
     private static String[] stationNames = {"Void","Cloud","Smoke","Magnet","Recovery"};
     private static int[] stationPrices = {0,0,0,0,0};
+    private static String[] stationInfo = {};
     public Shop(Player[] players){
         //need indexOf function
         for (int i = 0; i < piecesNames.length; i++) {
@@ -81,8 +85,8 @@ public class Shop {
         return false;
 
     }
-    public String getPieceInfo(int selectedPiece){
-        return piecesInfo[selectedPiece];
+    public String[] getPieceInfo(){
+        return piecesInfo;
     }
     public String[] getPieceNames(){
         return piecesNames;
@@ -99,11 +103,17 @@ public class Shop {
     public int[] getClickablesStock(){
         return clickablesStock;
     }
+    public String[] getClickableInfo(){
+        return clickableInfo;
+    }
     public String[] getStationNames(){
         return stationNames;
     }
     public int[] getStationPrices(){
         return stationPrices;
+    }
+    public String[] getStationInfo(){
+        return stationInfo;
     }
 
 

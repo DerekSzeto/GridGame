@@ -51,9 +51,18 @@ public class Refract extends Piece{
         //redirects to the opposite direction if the tile has the value of the opposite player
     }
     public void getDiagonals(){
-
+        for (int i = leftBound; i < rightBound; i++) {
+            for (int j = leftBound; j < rightBound; j++) {
+                if ((r + i) > 0 && (r + i) < tiles.length-1 && (c + j) > 0 && (c + j) < tiles[r + i].length-1) {
+                    if(tiles[r+i][c+j].getValue()!=value&tiles[r+i][c+j].getValue()!=4&tiles[r+i][c+j].getValue()!=value&tiles[r+i][c+j].getValue()!=0) {
+                        System.out.println("painted x2");
+                        tiles[r + i][c + j].setValue(value);
+                    }
+                }
+            }
+        }
     }
     public void reflection(){
-
+        //same tile moves back, makes other same tile move as well, mirrored movment
     }
 }

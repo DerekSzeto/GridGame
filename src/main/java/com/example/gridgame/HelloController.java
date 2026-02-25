@@ -6,13 +6,9 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class HelloController {
 
@@ -26,7 +22,6 @@ public class HelloController {
     public Label playerTurnLabel;
     public ListView playerPiecesListView;
     public Label pieceSelectedLabel;
-    public ListView playerClickableListView;
     public Label clickableSelectedLabel;
     public Label pieceInfoLabel;
     public ListView playerStationsListView;
@@ -43,12 +38,17 @@ public class HelloController {
     public Button buyStationButton;
     public Label warningLabel;
     public Label stationSelectedLabel;
+    public Label clickableInfoLabel;
+    public Label stationInfoLabel;
+    public ListView playerBombListView;
+    public ListView wallOrientationListView;
+    public ListView playerWallListView;
 
     private Button[][] btn;
     public void initialize(){
         //test get rid of this after
 
-        selectGridSize.getItems().addAll("10","11","24","25");
+        selectGridSize.getItems().addAll("10","11","20","21");
         selectGridSize.setValue("10");
 
 
@@ -85,6 +85,8 @@ public class HelloController {
     }
 
     public void handleClick() {
+        startButton.setVisible(false);
+
         int gridSize = Integer.parseInt(selectGridSize.getValue())+2;
         selectGridSize.setDisable(true);
 
@@ -98,9 +100,9 @@ public class HelloController {
             for (int j = 0; j < btn[0].length; j++) {
                 btn[i][j] = new Button(" ");
                 gpane.add(btn[i][j], j, i);
-                btn[i][j].setMinSize(40, 40);
-                btn[i][j].setPrefSize(40, 40);
-                btn[i][j].setMaxSize(40, 40);
+                btn[i][j].setMinSize(37, 37);
+                btn[i][j].setPrefSize(37, 37);
+                btn[i][j].setMaxSize(37, 37);
             }
         }
 
@@ -121,6 +123,7 @@ public class HelloController {
                                     currentPlayer.getPieces().indexOf(currentPlayer.getSelectedPiece()));
 
                             game.activateStations();
+                            game.virus();
                         }else{
                             warningLabel.setText("You have no more of this piece");
                         }
@@ -135,6 +138,7 @@ public class HelloController {
                             game.spawnStation(row,col,currentPlayer.getSelectedStation());
 
                             game.activateStations();
+                            game.virus();
                         }else{
                             warningLabel.setText("You have no more of this piece");
                         }
@@ -213,7 +217,7 @@ public class HelloController {
     }
     public void updatePlayerListViews(){
         playerPiecesListView.getItems().clear();
-        playerClickableListView.getItems().clear();
+
         playerStationsListView.getItems().clear();
         Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
         for (int j = 0; j < currentPlayer.getPieces().size(); j++) {
@@ -222,13 +226,13 @@ public class HelloController {
         }
         for (int i = 0; i < currentPlayer.getPlayerBombs().size(); i++) {
             if(currentPlayer.getPlayerBombs().get(i).getRadius()==1){
-                playerClickableListView.getItems().add("Grenade: "+currentPlayer.getPlayerBombs().get(i).getRadius());
+                playerBombListView.getItems().add("Grenade: "+currentPlayer.getPlayerBombs().get(i).getRadius());
             }else{
-                playerClickableListView.getItems().add("Bomb: "+currentPlayer.getPlayerBombs().get(i).getRadius());
+                playerBombListView.getItems().add("Bomb: "+currentPlayer.getPlayerBombs().get(i).getRadius());
             }
         }
         for (int i = 0; i < currentPlayer.getPlayerWalls().size(); i++) {
-            playerClickableListView.getItems().add("Wall: " +currentPlayer.getPlayerWalls().get(i).getLength());
+            playerWallListView.getItems().add("Wall: " +currentPlayer.getPlayerWalls().get(i).getLength());
         }
         for (int i = 0; i < currentPlayer.getPlayerStations().size(); i++) {
             playerStationsListView.getItems().add(currentPlayer.getPlayerStations().get(i) + " | Left: "+ currentPlayer.getStationCount().get(i));
@@ -238,7 +242,7 @@ public class HelloController {
     public void checkGameOver(){
         int player = game.checkGameOver();
         if(player!=0) {
-            restartButton.setVisible(true);
+            restartButton.setDisable(false);
             selectGridSize.setDisable(false);
             winnerLabel.setText("Player " + player + " wins");
             if (player == 3) {
@@ -274,7 +278,7 @@ public class HelloController {
 
 
     public void restartGame(ActionEvent actionEvent) {
-        restartButton.setVisible(false);
+        restartButton.setDisable(true);
         winnerLabel.setText("");
         game.setGameOver(false);
 
@@ -315,6 +319,7 @@ public class HelloController {
         int pieceBuying = shopPiecesListView.getSelectionModel().getSelectedIndex();
         buyPieceButton.setVisible(true);
         buyPieceButton.setText("Buy "+ game.getShop().getPieceNames()[pieceBuying] + " for " + game.getShop().getPiecePrices()[pieceBuying] + " Credits?");
+        pieceInfoLabel.setText(game.getShop().getPieceInfo()[pieceBuying]);
 
     }
 
@@ -323,8 +328,6 @@ public class HelloController {
         updateScreen();
     }
 
-    public void selectClickable(MouseEvent mouseEvent) {
-    }
 
     public void buyClickable(ActionEvent actionEvent) {
         int clickBuying = shopClickablesListView.getSelectionModel().getSelectedIndex();
@@ -355,7 +358,7 @@ public class HelloController {
 
         buyClickableButton.setVisible(true);
         buyClickableButton.setText("Buy "+ game.getShop().getClickableNames()[clickBuying] + " for " + game.getShop().getClickablePrices()[clickBuying] + " Credits?");
-
+        clickableInfoLabel.setText(game.getShop().getClickableInfo()[clickBuying]);
     }
 
     public void selectStationBuying(MouseEvent mouseEvent) {
@@ -364,6 +367,8 @@ public class HelloController {
         int stationBuying = shopStationListView.getSelectionModel().getSelectedIndex();
         buyStationButton.setVisible(true);
         buyStationButton.setText("Buy "+ game.getShop().getStationNames()[stationBuying] + " for " + game.getShop().getStationPrices()[stationBuying] + " Credits?");
+        stationInfoLabel.setText(game.getShop().getStationInfo()[stationBuying]);
+
     }
     public void disableShopButtons() {
         buyStationButton.setDisable(true);
@@ -377,6 +382,9 @@ public class HelloController {
         shopPiecesListView.getSelectionModel().clearSelection();
         shopClickablesListView.getSelectionModel().clearSelection();
         shopStationListView.getSelectionModel().clearSelection();
+        stationInfoLabel.setText("");
+        clickableInfoLabel.setText("");
+        pieceInfoLabel.setText("");
     }
 
     public void selectOrientation(MouseEvent mouseEvent) {

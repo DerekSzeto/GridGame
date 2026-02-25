@@ -1,11 +1,11 @@
 package com.example.gridgame;
 
-public class RepelledPiece extends Piece {
+public class ManipulatedPiece extends Piece {
     private int dH;
     private int dV;
     private int tileValue; // the tile value we are moving
 
-    public RepelledPiece(int r, int c, int h, int v, int val) {
+    public ManipulatedPiece(int r, int c, int h, int v, int val) {
         super(r, c);
         this.dH = h;
         this.dV = v;

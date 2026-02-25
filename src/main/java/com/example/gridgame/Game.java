@@ -284,10 +284,10 @@ public class Game {
 
     }
     public void activateStations() {
-//        virus();
         for (int i = 0; i < stations.size(); i++) {
             if(stations.get(i) instanceof Magnet){
-               ((Magnet) stations.get(i)).repel(tiles,piecesShot);
+               ((Magnet) stations.get(i)).manipulatePieces(tiles,piecesShot);
+                ((Magnet) stations.get(i)).alternateModes();
             }
             if(stations.get(i) instanceof Void){
 //                ((Void) ((Void) stations.get(i)).deletion();)
@@ -320,7 +320,7 @@ public class Game {
     }
     public void spawnStation(int r, int c,String stationName){
         if(stationName.equals("Magnet")){
-            stations.add(new Magnet(r,c,playerTurn,1));
+            stations.add(new Magnet(r,c,playerTurn,2,2,"repel"));
             tiles[r][c].setValue(7);
         }else if(stationName.equals("Void")){
             stations.add(new Void(r,c,playerTurn));
