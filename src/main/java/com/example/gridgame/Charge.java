@@ -4,8 +4,15 @@ public class Charge {
     private int charge = 0;
     // charge of 1 2 3 will do diff things just think of what
     //charge and release button does not use listview only use listview to select
-    public void chargePiece(){
-        charge++;
+    public boolean chargePiece(){
+        if(charge<=3) {
+            charge++;
+            return true;
+        }
+        return false;
+    }
+    public void releaseChargePiece(){
+
     }
     public void explosion(){
 
@@ -25,5 +32,6 @@ public class Charge {
     }
     public void spawnRandomPiece(){
         //paint shadow, rocket
+
     }
 }
