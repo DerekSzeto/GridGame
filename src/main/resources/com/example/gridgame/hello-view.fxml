@@ -11,13 +11,13 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1600.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gridgame.HelloController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="900.0" minWidth="1600.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gridgame.HelloController">
   <tabs>
     <Tab text="Game">
       <content>
         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="871.0" prefWidth="1106.0">
                <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#abe4bd" height="45.0" layoutX="1398.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="179.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#abe4bd" height="45.0" layoutX="1398.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="195.0" />
                  <GridPane fx:id="gpane" layoutX="260.0" layoutY="131.0" prefHeight="0.0" prefWidth="0.0">
 
                  </GridPane>
@@ -30,9 +30,9 @@
                         <Font name="Calibri Bold" size="24.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="playerPiecesListView" layoutX="1403.0" layoutY="79.0" onMouseClicked="#selectPiece" prefHeight="123.0" prefWidth="189.0" />
+                  <ListView fx:id="playerPiecesListView" layoutX="1399.0" layoutY="79.0" onMouseClicked="#selectPiece" prefHeight="123.0" prefWidth="193.0" />
                   <Label fx:id="pieceSelectedLabel" layoutX="1403.0" layoutY="204.0" prefHeight="27.0" prefWidth="188.0" />
-                  <ListView fx:id="playerBombListView" layoutX="1398.0" layoutY="311.0" onMouseClicked="#selectClickable" prefHeight="123.0" prefWidth="192.0" />
+                  <ListView fx:id="playerBombListView" layoutX="1397.0" layoutY="311.0" prefHeight="123.0" prefWidth="193.0" />
                   <Label fx:id="clickableSelectedLabel" layoutX="7.0" layoutY="320.0">
                      <font>
                         <Font size="16.0" />
@@ -58,7 +58,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="playerStationsListView" layoutX="1399.0" layoutY="617.0" onMouseClicked="#selectStation" prefHeight="123.0" prefWidth="192.0" />
+                  <ListView fx:id="playerStationsListView" layoutX="1395.0" layoutY="617.0" onMouseClicked="#selectStation" prefHeight="123.0" prefWidth="196.0" />
                   <Label layoutX="1399.0" layoutY="595.0" prefHeight="22.0" prefWidth="190.0" text="Stations" underline="true">
                      <font>
                         <Font name="Calibri Bold" size="18.0" />
@@ -106,12 +106,12 @@
                         <Font name="Calibri Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="player1CreditLabel" layoutX="243.0" layoutY="9.0" prefHeight="27.0" prefWidth="163.0" text="Player 1's Credit:">
+                  <Label fx:id="player1CreditLabel" layoutX="243.0" layoutY="9.0" prefHeight="27.0" prefWidth="298.0" text="Player 1's Credit:">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="player2CreditLabel" layoutX="467.0" layoutY="9.0" prefHeight="27.0" prefWidth="163.0" text="Player 2's Credit:">
+                  <Label fx:id="player2CreditLabel" layoutX="549.0" layoutY="9.0" prefHeight="27.0" prefWidth="316.0" text="Player 2's Credit:">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -162,9 +162,9 @@
                   <Button fx:id="buyPieceButton" layoutX="3.0" layoutY="587.0" mnemonicParsing="false" onAction="#buyPiece" prefHeight="52.0" prefWidth="202.0" />
                   <Button fx:id="buyClickableButton" layoutX="416.0" layoutY="587.0" mnemonicParsing="false" onAction="#buyClickable" prefHeight="52.0" prefWidth="202.0" />
                   <Button fx:id="buyStationButton" layoutX="828.0" layoutY="587.0" mnemonicParsing="false" onAction="#buyStation" prefHeight="52.0" prefWidth="202.0" />
-                  <Label fx:id="pieceInfoLabel" layoutX="212.0" layoutY="347.0" prefHeight="17.0" prefWidth="171.0" text="Info:" wrapText="true" />
-                  <Label fx:id="clickableInfoLabel" layoutX="617.0" layoutY="347.0" prefHeight="17.0" prefWidth="210.0" text="Info:" wrapText="true" />
-                  <Label fx:id="stationInfoLabel" layoutX="1029.0" layoutY="347.0" prefHeight="17.0" prefWidth="188.0" text="Info:" wrapText="true" />
+                  <Label fx:id="pieceInfoLabel" alignment="TOP_LEFT" layoutX="212.0" layoutY="347.0" prefHeight="236.0" prefWidth="202.0" text="Info:" wrapText="true" />
+                  <Label fx:id="clickableInfoLabel" alignment="TOP_LEFT" layoutX="617.0" layoutY="347.0" prefHeight="235.0" prefWidth="210.0" text="Info:" wrapText="true" />
+                  <Label fx:id="stationInfoLabel" alignment="TOP_LEFT" layoutX="1029.0" layoutY="347.0" prefHeight="231.0" prefWidth="232.0" text="Info:" wrapText="true" />
                </children></AnchorPane>
       </content>
     </Tab>

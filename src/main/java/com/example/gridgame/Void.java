@@ -4,46 +4,58 @@ import java.util.ArrayList;
 
 public class Void extends Station{
     private ArrayList<Tile> area = new ArrayList<>();
-    private boolean expansion = false;
     private int radius = 1;
     public Void(int r, int c, int v){
         super(r,c,v);
     }
-    public void stage(){
-        if(expansion){
+    public void toggleStage(){
+        if(radius==1){
             radius = 2;
         }else{
-            radius = 1;
+            radius  =1;
         }
     }
-    public void deletion(int r, int c, Tile[][] tiles){
+    public void deletion(Tile[][] tiles){
         int leftBound = -1 * radius ;
         int rightBound = 1 + radius ;
         for (int i = leftBound; i < rightBound; i++) {
             for (int j = leftBound; j < rightBound; j++) {
-                if ((r + i) > 0 && (r + i) < tiles.length-1 && (c + j) > 0 && (c + j) < tiles[r + i].length-1) {
-                    if(i != 0 & j!= 0) {
-                        tiles[r + i][c + j].setValue(0);
+                if ((row + i) > 0 && (row + i) < tiles.length-1 && (col + j) > 0 && (col + j) < tiles[row + i].length-1) {
+                    if(i != 0 || j != 0) {
+                        tiles[row + i][col + j].setValue(0);
                     }else{
-                        tiles[r + i][c + j].setValue(10);
+                        tiles[row + i][col + j].setValue(10);
                     }
                 }
             }
         }
     }
-    public void pull(int r, int c){
-        //this should decide what pieces to pull closer to the void station
-    }
-    public void deflect(Piece piece){
-        ;//fix this at home
-        if(piece.getDirection().equals("left")) {
-            piece.setDirection("right");
-        }else if(piece.getDirection().equals("right")){
-            piece.setDirection("left");
-        }else if(piece.getDirection().equals("up")){
-            piece.setDirection("down");
-        } else if(piece.getDirection().equals("down")){
-            piece.setDirection("up");
+    public void deflect(ArrayList<Piece> piecesShot) {
+
+        for (int i = 0; i < piecesShot.size(); i++) {
+            Piece piece = piecesShot.get(i);
+
+            int pieceCurrentRow = piece.getCurrentRow();
+            int pieceCurrentCol = piece.getCurrentCol();
+
+            if (pieceCurrentRow >= (row - 1) && pieceCurrentRow <= (row + 1) && pieceCurrentCol >= (col - 1) && pieceCurrentCol <= (col + 1)){
+                int dH = 0;
+                int dV = 0;
+                if (piece.getDirection().equals("left")) {
+                    dH = 0;
+                    dV = 1;
+                } else if (piece.getDirection().equals("right")) {
+                    dH = 0;
+                    dV = -1;
+                } else if (piece.getDirection().equals("up")) {
+                    dH = 1;
+                    dV = 0;
+                } else if (piece.getDirection().equals("down")) {
+                    dH = -1;
+                    dV = 0;
+                }
+                piecesShot.set(i, new ManipulatedPiece(pieceCurrentRow, pieceCurrentCol, dH, dV, 0));
+            }
         }
     }
 }

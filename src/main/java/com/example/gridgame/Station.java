@@ -20,6 +20,12 @@ public class Station {
     public int getValue(){
         return value;
     }
-
+    public int getCheckingValue(){
+        if(value==1){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
 
 }

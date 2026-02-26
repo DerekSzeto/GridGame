@@ -13,4 +13,17 @@ public class Charge {
     public void burstPieces(){
 
     }
+    public void elastic(){
+
+    }
+    public void allSides(){
+
+    }
+    //figure out how to override
+    public void move(){
+
+    }
+    public void spawnRandomPiece(){
+        //paint shadow, rocket
+    }
 }

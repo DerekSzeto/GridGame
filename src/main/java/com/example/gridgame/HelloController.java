@@ -59,9 +59,6 @@ public class HelloController {
         for (int i = 0; i < game.getPlayers().length; i++) {
             selectPlayerBuyingListView.getItems().add(game.getPlayers()[i].getName() + " | Credit: " + game.getPlayers()[i].getCredits());
         }
-
-        game.getPlayers()[0].getPlayerBombs().add(new Bomb(1));
-        game.getPlayers()[1].getPlayerBombs().add(new Bomb(2));
     }
     private Game game = new Game();
 
@@ -124,8 +121,11 @@ public class HelloController {
                             game.shootPiece(row, col, currentPlayer.getSelectedPiece(),
                                     currentPlayer.getPieces().indexOf(currentPlayer.getSelectedPiece()));
 
-                            game.activateStations();
+                            game.magnetize();
                             game.virus();
+                            game.decrementCrossTick();
+                            game.earnCredit();
+
                         }else{
                             warningLabel.setText("You have no more of this piece");
                         }
@@ -139,8 +139,10 @@ public class HelloController {
                             System.out.println("middle");
                             game.spawnStation(row,col,currentPlayer.getSelectedStation());
 
-                            game.activateStations();
+                            game.magnetize();
                             game.virus();
+                            game.decrementCrossTick();
+                            game.earnCredit();
                         }else{
                             warningLabel.setText("You have no more of this piece");
                         }
@@ -263,7 +265,7 @@ public class HelloController {
                     for (int i = 0; i < game.getPiecesShot().size(); i++) {
                         if (game.getPiecesShot().get(i).canMove()) {
                             game.getPiecesShot().get(i).move(game.getTiles());
-
+                            game.voiding();
                         } else {
                             game.stopPiece(i);
                         }

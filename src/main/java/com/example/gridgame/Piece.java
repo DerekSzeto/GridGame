@@ -61,9 +61,6 @@ public class Piece {
     public String getDirection(){
         return direction;
     }
-    public void setDirection(String direction){
-        this.direction = direction;
-    }
     public boolean canMove() {
         return canMove;
     }

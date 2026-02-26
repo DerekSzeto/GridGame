@@ -64,11 +64,4 @@ public class Virus extends Station{
         randomTile.setValue(6);
         System.out.println("size: "+stations.size());
     }
-    public int getCheckingValue(){
-        if(value==1){
-            return 2;
-        }else{
-            return 1;
-        }
-    }
 }

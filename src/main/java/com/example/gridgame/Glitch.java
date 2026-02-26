@@ -7,32 +7,8 @@ public class Glitch extends Piece{
     public Glitch(int r, int c){
         super(r,c);
     }
-    @Override
-    public void move(Tile[][] tiles){
-
-        int newRow = currentRow;
-        int newCol = currentCol;
-
-        if(direction.equals("right")){
-            newCol = currentCol+1;
-        }else if(direction.equals("left")){
-            newCol = currentCol-1;
-        }else if(direction.equals("up")){
-            newRow = currentRow-1;
-        }else if(direction.equals("down")){
-            newRow = currentRow+1;
-        }
 
 
-        if  (tiles[newRow][newCol].getValue() == 0){
-            currentCol = newCol;
-            currentRow = newRow;
-        }else if (tiles[newRow][newCol].getValue() > 0){
-            canMove = false;
-        }
-
-
-    }
     public ArrayList<Tile> getRandomNearbyTile(Tile[][] tiles){
         ArrayList<Tile> nearbyTiles = new ArrayList<>();
         for (int i = -1; i < 2; i++) {

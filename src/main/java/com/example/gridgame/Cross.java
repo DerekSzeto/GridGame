@@ -7,25 +7,21 @@ public class Cross extends Piece{
     //make the X last 4 turns !!!!!!!!!!!!!!!!!!!!!!!!
     private String mode; //color or erase
     private ArrayList<Tile> activationPoints = new ArrayList<>();
-    public Cross(int r, int c,String mode){
+    public Cross(int r, int c){
         super(r,c);
         this.mode = mode;
     }
     public void diagonals(Tile[][] tiles,int v){
         //downward to the right
-        int value = 0;
-        if(mode.equals("color")){
-            value = v;
-        }
         for (int i = 1; i < tiles.length-1 ; i++) {
-            tiles[i][i].setValue(value);
+            tiles[i][i].setValue(v);
         }
 
         int tileCount = 0;
         int row = 1;
         int col = tiles.length-2;
         while(tileCount<tiles.length-2){
-            tiles[row][col].setValue(value);
+            tiles[row][col].setValue(v);
             row++;
             col--;
             tileCount++;

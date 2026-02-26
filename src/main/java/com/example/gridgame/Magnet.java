@@ -72,13 +72,7 @@ public class Magnet extends Station{
             return value;
         }
     }
-    public int getCheckingValue(){
-        if(value==1){
-            return 2;
-        }else{
-            return 1;
-        }
-    }
+
     public void alternateModes(){
         if(mode.equals("repel")){
             mode = "attract";

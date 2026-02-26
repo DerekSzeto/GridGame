@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class Shop {
-    private static String[] piecesNames = {"Shadow","Friction","Eraser","Paint","Zombie","Cross","Glitch","Refract","Rocket","Spiral","Refract","Charge"};
+    private static String[] piecesNames = {"Shadow","Friction","Eraser","Paint","Zombie","Cross","Glitch","Refract","Rocket","Spiral","Charge"};
     private static ArrayList<String> pieces = new ArrayList<>();
     private static int[] piecePrices = new int[piecesNames.length]; // <---- change ts later
     private static String[] piecesInfo = {
@@ -19,7 +19,7 @@ public class Shop {
     private static String[] clickableInfo = {"Detonates on use, clearing all pieces and obstacles in the eight surrounding tiles (1-tile radius) while leaving the center tile intact."
     ,"Upon activation, this device clears all pieces and obstacles within an extended radius, affecting a significantly larger area than the standard shockwave item. Its wide-range effect makes it strategically valuable for disrupting clustered formations and shifting board control."
     ,"When placed, this structure automatically extends outward in a straight line from the placement tile, building horizontally from left to right and vertically from top to bottom according to its orientation. The wall continues constructing until it reaches the board boundary or an occupied tile, creating a continuous barrier that can block movement and control space."};
-    private static String[] stationNames = {"Void","Cloud","Smoke","Magnet","Recovery"};
+    private static String[] stationNames = {"Void","Smoke","Magnet"};
     private static int[] stationPrices = {0,0,0,0,0};
     private static String[] stationInfo = {};
     public Shop(Player[] players){

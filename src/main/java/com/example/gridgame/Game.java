@@ -12,6 +12,10 @@ public class Game {
     private Player[] players = {player1, player2};
     private Shop shop = new Shop(players);
     private int whoIsBuying;
+
+    private boolean crossActive = false;
+    private int crossTick = 0;
+
     private boolean gameOver = false;
 
     public void selectWhoIsBuying(int player){
@@ -84,7 +88,7 @@ public class Game {
             }else if(pieceName.equals("Zombie")){
                 piecesShot.add(0,new Zombie(r,c,playerTurn));
             }else if(pieceName.equals("Cross")){
-                piecesShot.add(0,new Cross(r,c,"color"));
+                piecesShot.add(0,new Cross(r,c));
                 ((Cross) piecesShot.getFirst()).determineActivationPoints(tiles);
             }else if(pieceName.equals("Spiral")){
                 piecesShot.add(0,new Spiral(r,c,2,playerTurn));
@@ -108,14 +112,14 @@ public class Game {
             playerTurn = 1;
         }
     }
-    public void earnCredit(int player) {
+    public void earnCredit() {
         Player currentPlayer = players[playerTurn - 1];
 
         for (int i = 1; i < tiles.length - 1; i++) {
             int count = 0;
 
             for (int j = 1; j < tiles[i].length - 1; j++) {
-                if (tiles[i][j].getValue() == player) {
+                if (tiles[i][j].getValue() == playerTurn) {
                     count++;
                     if (count >= 2) {
                         currentPlayer.setCredits(currentPlayer.getCredits() + 1);
@@ -128,7 +132,7 @@ public class Game {
         for (int j = 1; j < tiles[0].length - 1; j++) {
             int count = 0;
             for (int i = 1; i < tiles.length - 1; i++) {
-                if (tiles[i][j].getValue() == player) {
+                if (tiles[i][j].getValue() == playerTurn) {
                     count++;
                     if (count >= 2) {
                         currentPlayer.setCredits(currentPlayer.getCredits() + 1);
@@ -285,6 +289,7 @@ public class Game {
             }
         }
     }
+    //after collisions
     public void stopPiece(int piece) {
         if( piecesShot.get(piece) instanceof Paint){
             ((Paint) piecesShot.get(piece)).paintTiles(tiles, piecesShot.get(piece).getCurrentRow(), piecesShot.get(piece).getCurrentCol(),playerTurn);
@@ -295,6 +300,8 @@ public class Game {
         }else if(piecesShot.get(piece) instanceof Cross){
             if(((Cross) piecesShot.get(piece)).atDestination()){
                 ((Cross) piecesShot.get(piece)).diagonals(tiles,playerTurn);
+                crossTick = 4;
+                crossActive = true;
             };
         }
 
@@ -302,9 +309,12 @@ public class Game {
         //rocket trail temp value
         rocketTrail();
 
+
         if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 0 & !(piecesShot.get(piece) instanceof Eraser) & !(piecesShot.get(piece) instanceof Spiral)) {
             tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].setValue(playerTurn);
         }
+
+        inhalePieces();
 
         if ((tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() < 4 )|tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 6){
             switchPlayer();
@@ -314,14 +324,21 @@ public class Game {
 
 
     }
-    public void activateStations() {
+    public void inhalePieces(){
+        for (int i = 0; i < stations.size(); i++) {
+            if(stations.get(i) instanceof Smoke){
+                if(((Smoke)stations.get(i)).isSmokesActive()) {
+                    ((Smoke) stations.get(i)).getTilesNearby(tiles);
+                    ((Smoke) stations.get(i)).nextTurn(tiles);
+                }
+            }
+        }
+    }
+    public void magnetize() {
         for (int i = 0; i < stations.size(); i++) {
             if(stations.get(i) instanceof Magnet){
                ((Magnet) stations.get(i)).manipulatePieces(tiles,piecesShot);
                 ((Magnet) stations.get(i)).alternateModes();
-            }
-            if(stations.get(i) instanceof Void){
-//                ((Void) ((Void) stations.get(i)).deletion();)
             }
         }
 
@@ -355,24 +372,60 @@ public class Game {
             tiles[r][c].setValue(7);
         }else if(stationName.equals("Void")){
             stations.add(new Void(r,c,playerTurn));
-            tiles[r][c].setValue(10);
+            ((Void)(stations.get(stations.size()-1))).deletion(tiles);
         }else if(stationName.equals("Recovery")){
             stations.add(new Recovery(r,c,playerTurn,tiles));
+        }else if(stationName.equals("Smoke")){
+            stations.add(new Smoke(r,c,playerTurn));
+            ((Smoke)(stations.get(stations.size()-1))).dropSmokes(tiles);
         }
-    }
-    public boolean isThereVoid(){
-        for (int i = 0; i < stations.size(); i++) {
-            if(stations.get(i) instanceof Void){
-                return true;
-            }
-        }
-        return false;
     }
     public void voiding(){
+        int voidAction = (int)(Math.random()*2);
+        if(voidAction == 0){
+            voidDeflection();
+        }else{
+            voidDeletion();
+        }
+    }
+    public void voidDeflection(){
         for (int i = 0; i < stations.size(); i++) {
             if(stations.get(i) instanceof Void){
-//                ((Void) ((Void) stations.get(i)).deflect();
+                ((Void) stations.get(i)).deflect(piecesShot);
             }
+        }
+    }
+    public void voidDeletion(){
+        for (int i = 0; i < stations.size(); i++) {
+            if(stations.get(i) instanceof Void){
+                ((Void) stations.get(i)).deletion(tiles);
+                ((Void) stations.get(i)).toggleStage();
+            }
+        }
+    }
+    public void decrementCrossTick(){
+        if(crossActive) {
+            if (crossTick > 0) {
+                crossTick--;
+            }else{
+                crossActive = false;
+                clearDiagonals();
+            }
+        }
+    }
+    public void clearDiagonals(){
+        for (int i = 1; i < tiles.length-1 ; i++) {
+            tiles[i][i].setValue(0);
+        }
+
+        int tileCount = 0;
+        int row = 1;
+        int col = tiles.length-2;
+        while(tileCount<tiles.length-2){
+            tiles[row][col].setValue(0);
+            row++;
+            col--;
+            tileCount++;
         }
     }
 
