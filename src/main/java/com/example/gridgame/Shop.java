@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class Shop {
     private static String[] piecesNames = {"Shadow","Friction","Eraser","Paint","Zombie","Cross","Glitch","Refract","Rocket","Spiral","Charge"};
-    private static ArrayList<String> pieces = new ArrayList<>();
     private static int[] piecePrices = new int[piecesNames.length]; // <---- change ts later
     private static String[] piecesInfo = {
 
@@ -24,9 +23,6 @@ public class Shop {
     private static String[] stationInfo = {};
     public Shop(Player[] players){
         //need indexOf function
-        for (int i = 0; i < piecesNames.length; i++) {
-            pieces.add(piecesNames[i]);
-        }
         for (int i = 0; i < players.length; i++) {
             for (int j = 0; j < stationNames.length; j++) {
                 players[i].getPlayerStations().add(stationNames[j]);
