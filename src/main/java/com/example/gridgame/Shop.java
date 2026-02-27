@@ -4,10 +4,19 @@ import java.util.ArrayList;
 
 
 public class Shop {
-    private static String[] piecesNames = {"Shadow","Friction","Eraser","Paint","Zombie","Cross","Glitch","Refract","Rocket","Spiral","Charge"};
+    private static String[] piecesNames = {"Shadow","Friction","Cross","Paint","Zombie","Charge","Glitch","Refract","Rocket","Spiral","Eraser",};
     private static int[] piecePrices = new int[piecesNames.length]; // <---- change ts later
     private static String[] piecesInfo = {
-
+        "The Shadow moves with subtlety, making it difficult for opponents to predict its path and respond effectively. It is best used to create pressure in contested spaces while disrupting the enemy’s sense of control.",
+            "Friction interferes with movement, slowing the flow of nearby pieces and making repositioning more difficult. Its effect is especially useful for limiting mobility and controlling key lanes on the board.",
+            "The Cross affects tiles in both diagonal directions at once, giving it broad influence over the board. Its shape makes it effective for striking through multiple lanes and disrupting structured formations. It lasts 4 turns until it disappears",
+            "Paint changes the condition of affected tiles, marking territory and altering how pieces interact with that space. It is valuable for claiming control of important areas and shaping future movement.",
+            "The Zombie converts or corrupts what it reaches, turning opposing strength into an advantage for its own side. This makes it especially dangerous in crowded sections of the board where influence can spread.",
+            "Charge builds momentum as it moves, rewarding commitment to a direct and aggressive line of play. It is best used to pressure opponents quickly and force reactions before they can fully prepare.",
+            "Glitch introduces instability to the board, causing interactions to become less predictable and more difficult to counter. It is most effective when used to interrupt stable patterns and force opponents into mistakes.",
+            "Refract redirects movement or effects into new directions, creating unexpected outcomes and unusual board angles. This makes it useful for extending influence and turning straightforward plays into more complex threats.",
+            "The Rocket travels with speed and force along a direct path, allowing it to break through space and apply immediate pressure. It is most effective when used to challenge long lanes and punish exposed positions.",
+            "The Spiral advances in a rotating pattern, covering space in a way that is difficult to anticipate. Its unusual motion makes it effective for surrounding targets and disrupting predictable defenses."
 
     };
 
@@ -20,7 +29,12 @@ public class Shop {
     ,"When placed, this structure automatically extends outward in a straight line from the placement tile, building horizontally from left to right and vertically from top to bottom according to its orientation. The wall continues constructing until it reaches the board boundary or an occupied tile, creating a continuous barrier that can block movement and control space."};
     private static String[] stationNames = {"Void","Smoke","Magnet"};
     private static int[] stationPrices = {0,0,0,0,0};
-    private static String[] stationInfo = {};
+    private static String[] stationInfo = {
+            "The Void removes whatever occupies the selected tile, creating an empty space that can disrupt formations and open new paths on the board. Its precision makes it especially useful for breaking key positions without affecting surrounding tiles.",
+            "Smoke spreads across the surrounding area and temporarily obscures nearby tiles, making movement through that space less predictable. It is best used to interfere with positioning and create short-term control over a section of the grid.",
+            "The Magnet pulls nearby pieces toward its position, altering the arrangement of the board and disrupting established patterns. This makes it effective for drawing targets out of place and setting up stronger offensive or defensive plays."
+
+    };
     public Shop(Player[] players){
         //need indexOf function
         for (int i = 0; i < players.length; i++) {

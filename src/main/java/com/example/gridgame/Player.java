@@ -31,9 +31,6 @@ public class Player {
         selectedPiece = pieces.get(piece);
 
     }
-    public void setSelectedClickable(int clickable){
-
-    }
     public void setSelectedStation(int station){
         selectedStation = stations.get(station);
     }

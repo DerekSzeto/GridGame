@@ -20,9 +20,6 @@ public class Charge {
     public void burstPieces(){
 
     }
-    public void elastic(){
-
-    }
     public void allSides(){
 
     }

@@ -17,18 +17,16 @@ public class ManipulatedPiece extends Piece {
         int newRow = currentRow + dH;
         int newCol = currentCol + dV;
 
-        if (newRow > 0 && newRow < tiles.length - 1 &&
-                newCol > 0 && newCol < tiles[newRow].length - 1) {
-
-            if (tiles[newRow][newCol].getValue() == 0) {
-                currentRow = newRow;
-                currentCol = newCol;
-                tiles[currentRow][currentCol].setValue(tileValue);
-            } else {
-                canMove = false;
-            }
+        if (tiles[newRow][newCol].getValue() == 0) {
+            currentRow = newRow;
+            currentCol = newCol;
         } else {
             canMove = false;
         }
+    }
+
+
+    public int getStoredValue() {
+        return tileValue;
     }
 }

@@ -45,7 +45,7 @@ public class Friction extends Piece{
             stoppingPower = 0;
         }
 
-        int prob = (int)(Math.random() * dimensions);
+        int prob = (int)(Math.random() * dimensions+1);
         if (prob < stoppingPower) {
             return true;
         }

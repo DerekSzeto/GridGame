@@ -24,7 +24,7 @@ public class Shadow extends Piece{
         if  (tiles[newRow][newCol].getValue() <4){
             currentCol = newCol;
             currentRow = newRow;
-        }else if (tiles[newRow][newCol].getValue() == 4){
+        }else if (tiles[newRow][newCol].getValue() >= 4){
             canMove = false;
         }
     }

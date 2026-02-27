@@ -74,7 +74,8 @@ public class Magnet extends Station{
     }
 
     public void alternateModes(){
-        if(mode.equals("repel")){
+        int prob = (int)(Math.random()*2);
+        if(prob == 0) {
             mode = "attract";
         }else{
             mode = "repel";

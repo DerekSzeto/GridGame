@@ -45,6 +45,8 @@ public class HelloController {
     public ListView playerWallListView;
     public Label player1CreditLabel;
     public Label player2CreditLabel;
+    public Button releasePieceButton;
+    public Button chargePieceButton;
 
     private Button[][] btn;
     public void initialize(){
@@ -52,13 +54,14 @@ public class HelloController {
 
         selectGridSize.getItems().addAll("10","11","20","21");
         selectGridSize.setValue("10");
-
+        wallOrientationListView.getItems().addAll("Horizontal","Vertical");
 
         game.addPlayers();
 
         for (int i = 0; i < game.getPlayers().length; i++) {
             selectPlayerBuyingListView.getItems().add(game.getPlayers()[i].getName() + " | Credit: " + game.getPlayers()[i].getCredits());
         }
+        playerBuyingLabel.setText("Player 1 is Buying");
     }
     private Game game = new Game();
 
@@ -117,36 +120,47 @@ public class HelloController {
                     Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
                     int value = game.getTiles()[row][col].getValue();
                     if (event.getButton() == MouseButton.PRIMARY & value==4) {//shoot
-                        if(currentPlayer.getArsenal().get(currentPlayer.getPieces().indexOf(currentPlayer.getSelectedPiece()))>0) {
+                        if (game.isEndGame() && !currentPlayer.getSelectedPiece().equals("Standard")) {
+                            warningLabel.setText("During sudden death, only Standard pieces can capture points.");
+                        } else if(currentPlayer.getArsenal().get(currentPlayer.getPieces().indexOf(currentPlayer.getSelectedPiece()))>0) {
+
                             game.shootPiece(row, col, currentPlayer.getSelectedPiece(),
                                     currentPlayer.getPieces().indexOf(currentPlayer.getSelectedPiece()));
 
-                            game.magnetize();
-                            game.virus();
-                            game.decrementCrossTick();
-                            game.earnCredit();
-
+                           runGameEvents();
                         }else{
                             warningLabel.setText("You have no more of this piece");
                         }
                     } else if (event.getButton() == MouseButton.SECONDARY & value==0) { //clickables
-                        if (currentPlayer.getPlayerBombs().size() >= 1) {
-                            game.useBomb(game.getPlayerTurn() - 1, row, col);
-                            System.out.println("used bomb");
+                        //player selected bombs
+                        if(playerBombListView.getSelectionModel().getSelectedIndex()>=0) {
+
+                            if (!currentPlayer.getPlayerBombs().isEmpty()) {
+                                game.useBomb(playerBombListView.getSelectionModel().getSelectedIndex(), row, col);
+                                System.out.println("used bomb");
+                            }
+                        }else if(playerWallListView.getSelectionModel().getSelectedIndex()>=0) {
+                            int selectedWall = playerWallListView.getSelectionModel().getSelectedIndex();
+                            System.out.println(selectedWall);
+                            wallOrientationListView.setDisable(true);
+                            if(!currentPlayer.getPlayerWalls().isEmpty()) {
+                                if(currentPlayer.getPlayerWalls().get(selectedWall).getOrientation()!=null) {
+                                    game.constructWall(selectedWall,row,col);
+                                }
+                            }
                         }
                     } else if(event.getButton() == MouseButton.MIDDLE && value==0) {
+
                         if(currentPlayer.getStationCount().get(currentPlayer.getPlayerStations().indexOf(currentPlayer.getSelectedStation()))>0){
                             System.out.println("middle");
                             game.spawnStation(row,col,currentPlayer.getSelectedStation());
-
-                            game.magnetize();
-                            game.virus();
-                            game.decrementCrossTick();
-                            game.earnCredit();
+                            //actions in background
+                            runGameEvents();
                         }else{
                             warningLabel.setText("You have no more of this piece");
                         }
                     }
+
                     updateScreen();
                 }
             }
@@ -162,6 +176,14 @@ public class HelloController {
     //resets the gridlines
 //        gpane.setGridLinesVisible(false);
 //        gpane.setGridLinesVisible(true);
+    public void runGameEvents(){
+        game.magnetize();
+        game.virus();
+        game.decrementCrossTick();
+        game.earnCredit();
+        warningLabel.setText("");
+        game.incrementEndTurns();
+    }
     public void updateScreen(){
         //updates all tiles
 
@@ -186,6 +208,8 @@ public class HelloController {
                     btn[i][j].setStyle("-fx-background-color: black"); // void
                 }else if(game.getTiles()[i][j].getValue() == 11){
                     btn[i][j].setStyle("-fx-background-color: grey"); // smoke
+                }else if(game.getTiles()[i][j].getValue() == 12){
+                    btn[i][j].setStyle("-fx-background-color: cyan"); // win condition
                 }
             }
         }
@@ -223,7 +247,8 @@ public class HelloController {
     }
     public void updatePlayerListViews(){
         playerPiecesListView.getItems().clear();
-
+        playerBombListView.getItems().clear();
+        playerWallListView.getItems().clear();
         playerStationsListView.getItems().clear();
         Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
         for (int j = 0; j < currentPlayer.getPieces().size(); j++) {
@@ -238,7 +263,13 @@ public class HelloController {
             }
         }
         for (int i = 0; i < currentPlayer.getPlayerWalls().size(); i++) {
-            playerWallListView.getItems().add("Wall: " +currentPlayer.getPlayerWalls().get(i).getLength());
+            if(currentPlayer.getPlayerWalls().get(i).getOrientation()==null) {
+                playerWallListView.getItems().add("Wall: " + currentPlayer.getPlayerWalls().get(i).getLength());
+
+            }else{
+                playerWallListView.getItems().add("Wall: " +currentPlayer.getPlayerWalls().get(i).getLength() + currentPlayer.getPlayerWalls().get(i).getOrientation());
+
+            }
         }
         for (int i = 0; i < currentPlayer.getPlayerStations().size(); i++) {
             playerStationsListView.getItems().add(currentPlayer.getPlayerStations().get(i) + " | Left: "+ currentPlayer.getStationCount().get(i));
@@ -268,6 +299,7 @@ public class HelloController {
                             game.voiding();
                         } else {
                             game.stopPiece(i);
+                            endGame();
                         }
                         updateScreen();
                     }
@@ -289,6 +321,7 @@ public class HelloController {
         game.setGameOver(false);
 
         game.resetPlayerInventory();
+        updatePlayerListViews();
         resetGrid(actionEvent);
     }
 
@@ -394,6 +427,40 @@ public class HelloController {
     }
 
     public void selectOrientation(MouseEvent mouseEvent) {
+        Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
+        String orientation = wallOrientationListView.getSelectionModel().getSelectedItem().toString().substring(0,1);
 
+        for (int i = 0; i < currentPlayer.getPlayerWalls().size(); i++) {
+            currentPlayer.getPlayerWalls().get(i).setOrientation(orientation);
+        }
+        updatePlayerListViews();
+        wallOrientationListView.setDisable(true);
+    }
+
+    public void chargePiece(ActionEvent actionEvent) {
+    }
+
+    public void releasePiece(ActionEvent actionEvent) {
+    }
+
+    public void selectWall(MouseEvent mouseEvent) {
+        System.out.println(playerWallListView.getSelectionModel().getSelectedIndex());
+        wallOrientationListView.setDisable(false);
+    }
+    public void endGame(){
+        if (!game.isEndGame()) {
+            if (game.getEndGameTurns() >= 30) {
+                game.setEndGame(true);
+                resetGrid(new ActionEvent());
+                game.spawnCapturePoints();
+                shopStationListView.setDisable(true);
+                shopPiecesListView.setDisable(true);
+                shopClickablesListView.setDisable(true);
+                playerBombListView.setDisable(true);
+                playerStationsListView.setDisable(true);
+                updateScreen();
+                winnerLabel.setText("SUDDEN DEATH: Capture The Most Highlighted Areas to Win");
+            }
+        }
     }
 }

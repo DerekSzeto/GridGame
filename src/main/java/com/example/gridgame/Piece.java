@@ -1,5 +1,7 @@
 package com.example.gridgame;
 
+import java.util.ArrayList;
+
 public class Piece {
     protected int currentRow;
     protected int currentCol;
@@ -33,30 +35,32 @@ public class Piece {
         }
 
     }
-    public void move(Tile[][] tiles){
-
+    public void move(Tile[][] tiles) {
         int newRow = currentRow;
         int newCol = currentCol;
 
-        if(direction.equals("right")){
-            newCol = currentCol+1;
-        }else if(direction.equals("left")){
-            newCol = currentCol-1;
-        }else if(direction.equals("up")){
-            newRow = currentRow-1;
-        }else if(direction.equals("down")){
-            newRow = currentRow+1;
+        if (direction.equals("right")) {
+            newCol = currentCol + 1;
+        } else if (direction.equals("left")) {
+            newCol = currentCol - 1;
+        } else if (direction.equals("up")) {
+            newRow = currentRow - 1;
+        } else if (direction.equals("down")) {
+            newRow = currentRow + 1;
         }
 
-
-        if  (tiles[newRow][newCol].getValue() == 0){
+        if (tiles[newRow][newCol].getValue() == 0) {
             currentCol = newCol;
             currentRow = newRow;
-        }else if (tiles[newRow][newCol].getValue() > 0){
+
+        } else if (tiles[newRow][newCol].getValue() == 12) {
+            currentCol = newCol;
+            currentRow = newRow;
+            canMove = false;
+
+        } else if (tiles[newRow][newCol].getValue() > 0) {
             canMove = false;
         }
-
-
     }
     public String getDirection(){
         return direction;
@@ -64,4 +68,5 @@ public class Piece {
     public boolean canMove() {
         return canMove;
     }
+
 }

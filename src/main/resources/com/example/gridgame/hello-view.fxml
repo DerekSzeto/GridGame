@@ -21,7 +21,7 @@
                  <GridPane fx:id="gpane" layoutX="260.0" layoutY="131.0" prefHeight="0.0" prefWidth="0.0">
 
                  </GridPane>
-                  <Label fx:id="winnerLabel" alignment="CENTER" layoutX="549.0" layoutY="66.0" prefHeight="35.0" prefWidth="193.0" textFill="#e4b620">
+                  <Label fx:id="winnerLabel" alignment="CENTER" layoutX="244.0" layoutY="66.0" prefHeight="35.0" prefWidth="1031.0" textFill="#e4b620">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font></Label>
@@ -33,7 +33,7 @@
                   <ListView fx:id="playerPiecesListView" layoutX="1399.0" layoutY="79.0" onMouseClicked="#selectPiece" prefHeight="123.0" prefWidth="193.0" />
                   <Label fx:id="pieceSelectedLabel" layoutX="1403.0" layoutY="204.0" prefHeight="27.0" prefWidth="188.0" />
                   <ListView fx:id="playerBombListView" layoutX="1397.0" layoutY="311.0" prefHeight="123.0" prefWidth="193.0" />
-                  <Label fx:id="clickableSelectedLabel" layoutX="7.0" layoutY="320.0">
+                  <Label fx:id="clickableSelectedLabel" layoutX="1398.0" layoutY="581.0" prefHeight="25.0" prefWidth="195.0">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -58,8 +58,8 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="playerStationsListView" layoutX="1395.0" layoutY="617.0" onMouseClicked="#selectStation" prefHeight="123.0" prefWidth="196.0" />
-                  <Label layoutX="1399.0" layoutY="595.0" prefHeight="22.0" prefWidth="190.0" text="Stations" underline="true">
+                  <ListView fx:id="playerStationsListView" layoutX="1398.0" layoutY="665.0" onMouseClicked="#selectStation" prefHeight="123.0" prefWidth="196.0" />
+                  <Label layoutX="1402.0" layoutY="643.0" prefHeight="22.0" prefWidth="190.0" text="Stations" underline="true">
                      <font>
                         <Font name="Calibri Bold" size="18.0" />
                      </font>
@@ -78,8 +78,8 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Button>
-                  <ListView fx:id="wallOrientationListView" layoutX="7.0" layoutY="554.0" onMouseClicked="#selectOrientation" prefHeight="160.0" prefWidth="148.0" />
-                  <Label layoutX="9.0" layoutY="530.0" prefHeight="22.0" prefWidth="175.0" text="Edit Wall Orientation" underline="true">
+                  <ListView fx:id="wallOrientationListView" disable="true" layoutX="1271.0" layoutY="456.0" onMouseClicked="#selectOrientation" prefHeight="78.0" prefWidth="124.0" />
+                  <Label layoutX="1300.0" layoutY="434.0" prefHeight="22.0" prefWidth="74.0" text="Edit Wall " underline="true">
                      <font>
                         <Font name="Calibri Bold" size="18.0" />
                      </font>
@@ -89,7 +89,7 @@
                         <Font name="Calibri Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Label fx:id="stationSelectedLabel" layoutX="1400.0" layoutY="740.0" prefHeight="27.0" prefWidth="188.0" />
+                  <Label fx:id="stationSelectedLabel" layoutX="1403.0" layoutY="788.0" prefHeight="27.0" prefWidth="188.0" />
                   <Label alignment="TOP_LEFT" layoutX="6.0" layoutY="83.0" prefHeight="289.0" prefWidth="237.0" text="The objective of the Grid Game is to align five pieces consecutively in a row or a column to win, though additional win conditions may also apply. Players begin with a Standard Piece that moves only in a uniform direction, and can earn Credits over time to purchase other pieces with different abilities." wrapText="true">
                      <font>
                         <Font name="Calibri" size="18.0" />
@@ -100,7 +100,7 @@
                         <Font name="Calibri Bold" size="18.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="playerWallListView" layoutX="1398.0" layoutY="452.0" prefHeight="123.0" prefWidth="192.0" />
+                  <ListView fx:id="playerWallListView" layoutX="1398.0" layoutY="452.0" onMouseClicked="#selectWall" prefHeight="123.0" prefWidth="192.0" />
                   <Label layoutX="1399.0" layoutY="434.0" prefHeight="22.0" prefWidth="190.0" text="Walls">
                      <font>
                         <Font name="Calibri Bold" size="18.0" />
@@ -116,6 +116,26 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
+                  <Button fx:id="chargePieceButton" disable="true" layoutX="1264.0" layoutY="79.0" mnemonicParsing="false" onAction="#chargePiece" prefHeight="35.0" prefWidth="131.0" text="Charge Piece">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="releasePieceButton" disable="true" layoutX="1263.0" layoutY="123.0" mnemonicParsing="false" onAction="#releasePiece" prefHeight="35.0" prefWidth="132.0" text="Release Piece">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Label alignment="TOP_LEFT" layoutX="6.0" layoutY="575.0" prefHeight="289.0" prefWidth="237.0" text="Use left-click on border tiles to launch pieces onto the board, allowing you to begin movement and set up offensive plays. Use right-click to deploy bombs and walls for area control, while the middle mouse button is used to place stations that provide additional strategic effects." wrapText="true">
+                     <font>
+                        <Font name="Calibri" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="7.0" layoutY="548.0" prefHeight="27.0" prefWidth="163.0" text="Controls" underline="true">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
 
                </children></AnchorPane>
       </content>
@@ -124,6 +144,7 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2d8a68" height="796.0" layoutX="-2.0" layoutY="-3.0" stroke="BLACK" strokeType="INSIDE" width="1321.0" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#abe4bd" height="56.0" layoutX="11.0" layoutY="3.0" stroke="BLACK" strokeType="INSIDE" width="220.0" />
                   <ListView fx:id="selectPlayerBuyingListView" layoutX="11.0" layoutY="63.0" onMouseClicked="#selectPlayerBuying" prefHeight="156.0" prefWidth="148.0" />
                   <Label layoutX="14.0" layoutY="6.0" prefHeight="40.0" prefWidth="283.0" text="Select Player Buying">
@@ -149,7 +170,7 @@
                         <Font name="System Bold" size="22.0" />
                      </font>
                   </Label>
-                  <Label fx:id="playerBuyingLabel" layoutX="14.0" layoutY="133.0" prefHeight="32.0" prefWidth="201.0">
+                  <Label fx:id="playerBuyingLabel" layoutX="235.0" layoutY="15.0" prefHeight="32.0" prefWidth="201.0">
                      <font>
                         <Font name="System Bold" size="22.0" />
                      </font>

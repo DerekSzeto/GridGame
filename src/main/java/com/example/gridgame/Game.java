@@ -11,12 +11,20 @@ public class Game {
     private Player player2 = new Player("boi2");
     private Player[] players = {player1, player2};
     private Shop shop = new Shop(players);
-    private int whoIsBuying;
-
+    private int turnsUntilEndGame = 29;
+    private int whoIsBuying = 1;
+    private ArrayList<CapturePoint> capturePoints = new ArrayList<>();
+    private boolean endGame = false;
     private boolean crossActive = false;
     private int crossTick = 0;
 
     private boolean gameOver = false;
+    public void incrementEndTurns(){
+        turnsUntilEndGame++;
+    }
+    public int getEndGameTurns(){
+        return turnsUntilEndGame;
+    }
 
     public void selectWhoIsBuying(int player){
         whoIsBuying = player;
@@ -34,22 +42,6 @@ public class Game {
     public Player[] getPlayers(){
         return players;
     }
-
-    private int[][] board =
-            {       {5,4,4,4,4,4,4,4,4,4,4,5},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {4,0,0,0,0,0,0,0,0,0,0,4},
-                    {5,4,4,4,4,4,4,4,4,4,4,5}
-
-            };
 
     public void createBoard(int row, int col){
         tiles = new Tile[row][col];
@@ -76,7 +68,7 @@ public class Game {
     public void shootPiece(int r, int c, String pieceName, int pieceIndex){
         if(tiles[r][c].getValue()==4) {
             if(pieceName.equals("Standard")) {
-                piecesShot.add(new Piece(r, c));
+                piecesShot.add(0,new Piece(r, c));
             } else if(pieceName.equals("Paint")) {
                 piecesShot.add(0,new Paint(r, c,1));
             }else if(pieceName.equals("Shadow")) {
@@ -94,6 +86,8 @@ public class Game {
                 piecesShot.add(0,new Spiral(r,c,2,playerTurn));
             } else if (pieceName.equals("Friction")) {
                 piecesShot.add(0,new Friction(r,c,tiles.length));
+            } else if (pieceName.equals("Refract")) {
+                piecesShot.add(0,new Refract(r,c,playerTurn));
             }
             piecesShot.getFirst().setInitialDirection(r,c,tiles);
             players[playerTurn-1].getArsenal().set(pieceIndex,players[playerTurn-1].getArsenal().get(pieceIndex)-1);
@@ -143,7 +137,12 @@ public class Game {
             }
         }
     }
-    public int checkGameOver(){
+    public int checkGameOver() {
+        if (endGame && allCapturePointsCaptured()) {
+            gameOver = true;
+            return mostCapturePoints();
+        }
+
         for (int i = 1; i < 3; i++) {
             if (patternOf5(i)) {
                 System.out.println("game over");
@@ -156,15 +155,24 @@ public class Game {
     }
     public void resetPlayerInventory(){
         for (int i = 0; i < players.length; i++) {
-            for (int j = players[i].getPieces().size(); j > 0; j--) {
+            for (int j = players[i].getPieces().size()-1; j >= 0; j--) {
                 players[i].getPieces().remove(j);
                 players[i].getStationCount().set(j,0);
                 players[i].getArsenal().remove(j);
             }
             players[i].getPieces().add(0,"Standard");
             players[i].getArsenal().add(0,99);
+            players[i].setCredits(0);
         }
-
+        resetGameStuff();
+    }
+    public void resetGameStuff(){
+        crossTick = 0;
+        crossActive = false;
+        stations.clear();
+        turnsUntilEndGame = 0;
+        capturePoints.clear();
+        endGame = false;
     }
     public boolean shootersLocked(){
         //not tested yet
@@ -264,19 +272,11 @@ public class Game {
         gameOver = b;
     }
 
-    public void useBomb(int player, int r, int c) {
-        Player playerWhoBombed = players[player];
-        playerWhoBombed.getPlayerBombs().getFirst().explode(r,c,tiles);
+    public void useBomb(int bombIndex, int r, int c) {
+        Player playerWhoBombed = players[playerTurn-1];
+        playerWhoBombed.getPlayerBombs().get(bombIndex).explode(r,c,tiles,stations);
 
-        for (int i = stations.size()-1; i >= 0 ; i--) {
-            for (int j = 0; j < playerWhoBombed.getPlayerBombs().getFirst().getExplodedArea().size(); j++) {
-                if(stations.get(i).getRow()==playerWhoBombed.getPlayerBombs().getFirst().getExplodedArea().get(j).getRow() && stations.get(i).getCol() ==playerWhoBombed.getPlayerBombs().getFirst().getExplodedArea().get(j).getCol() ){
-                    stations.remove(i);
-                }
-            }
-        }
-
-        players[player].getPlayerBombs().removeFirst();
+        playerWhoBombed.getPlayerBombs().remove(bombIndex);
 
         switchPlayer();
     }
@@ -291,6 +291,11 @@ public class Game {
     }
     //after collisions
     public void stopPiece(int piece) {
+        if (piecesShot.get(piece).getClass() == Piece.class) {
+            if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 12) {
+                capturePoint(piecesShot.get(piece).getCurrentRow(), piecesShot.get(piece).getCurrentCol(), playerTurn);
+            }
+        }
         if( piecesShot.get(piece) instanceof Paint){
             ((Paint) piecesShot.get(piece)).paintTiles(tiles, piecesShot.get(piece).getCurrentRow(), piecesShot.get(piece).getCurrentCol(),playerTurn);
         }else if(piecesShot.get(piece) instanceof Shadow){
@@ -303,6 +308,20 @@ public class Game {
                 crossTick = 4;
                 crossActive = true;
             };
+        }else if (piecesShot.get(piece) instanceof Refract) {
+
+
+            int collidedRow = ((Refract) piecesShot.get(piece)).getNewRow();
+            int collidedCol = ((Refract) piecesShot.get(piece)).getNewCol();
+
+            if (tiles[collidedRow][collidedCol].getValue() == ((Refract) piecesShot.get(piece)).getCheckingValue()) {
+                ((Refract) piecesShot.get(piece)).refract(tiles, piecesShot);
+            }
+        }else if (piecesShot.get(piece) instanceof ManipulatedPiece) {
+            if (tiles[(piecesShot.get(piece)).getCurrentRow()][(piecesShot.get(piece)).getCurrentCol()].getValue() == 0) {
+                tiles[(piecesShot.get(piece)).getCurrentRow()][(piecesShot.get(piece)).getCurrentCol()].setValue(((ManipulatedPiece) piecesShot.get(piece)).getStoredValue());
+            }
+
         }
 
 
@@ -316,11 +335,13 @@ public class Game {
 
         inhalePieces();
 
-        if ((tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() < 4 )|tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 6){
+        if ((tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() < 4 )|tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 6
+        && !(piecesShot.get(piece) instanceof ManipulatedPiece)){
             switchPlayer();
         }
 
         piecesShot.remove(piece);
+
 
 
     }
@@ -363,8 +384,31 @@ public class Game {
     public void determineSpecialCond(){
 
     }
+    public boolean isEndGame(){
+        return endGame;
+    }
     public void spawnCapturePoints(){
-
+        int capPoints = (int)(Math.pow(tiles.length,2)/tiles.length);
+        for (int i = 0; i < capPoints; i++) {
+            int row = (int)(Math.random()* (tiles.length-2) + 1);
+            int col = (int)(Math.random()* (tiles.length-2) + 1);
+            if(tiles[row][col].isSpecial()){
+                i--;
+            }else{
+                capturePoints.add(new CapturePoint(row,col));
+                tiles[row][col].setTileSpecial(true);
+            }
+        }
+        changeToSpecialTiles();
+    }
+    public void changeToSpecialTiles(){
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                if(tiles[i][j].isSpecial()){
+                    tiles[i][j].setValue(12);
+                }
+            }
+        }
     }
     public void spawnStation(int r, int c,String stationName){
         if(stationName.equals("Magnet")){
@@ -373,12 +417,13 @@ public class Game {
         }else if(stationName.equals("Void")){
             stations.add(new Void(r,c,playerTurn));
             ((Void)(stations.get(stations.size()-1))).deletion(tiles);
-        }else if(stationName.equals("Recovery")){
-            stations.add(new Recovery(r,c,playerTurn,tiles));
         }else if(stationName.equals("Smoke")){
             stations.add(new Smoke(r,c,playerTurn));
             ((Smoke)(stations.get(stations.size()-1))).dropSmokes(tiles);
         }
+        int stationIndex = players[playerTurn-1].getPlayerStations().indexOf(stationName);
+        players[playerTurn-1].getStationCount().set(stationIndex,players[playerTurn-1].getStationCount().get(stationIndex)-1);
+        switchPlayer();
     }
     public void voiding(){
         int voidAction = (int)(Math.random()*2);
@@ -429,4 +474,74 @@ public class Game {
         }
     }
 
+    public void constructWall(int wallIndex, int r, int c) {
+        Player currentPlayer = players[playerTurn-1];
+        System.out.println("wall built");
+        currentPlayer.getPlayerWalls().get(wallIndex).setStartingRow(r);
+        currentPlayer.getPlayerWalls().get(wallIndex).setStartingCol(c);
+        currentPlayer.getPlayerWalls().get(wallIndex).constructWall(tiles);
+
+        currentPlayer.getPlayerWalls().remove(wallIndex);
+
+        switchPlayer();
+    }
+    public void chargePiece(){
+
+    }
+
+    public void setEndGame(boolean b) {
+        endGame = b;
+    }
+    public ArrayList<CapturePoint> getCapturePoints() {
+        return capturePoints;
+    }
+    public CapturePoint getCapturePointAt(int row, int col) {
+        for (int i = 0; i < capturePoints.size(); i++) {
+            if (capturePoints.get(i).getRow() == row && capturePoints.get(i).getCol() == col) {
+                return capturePoints.get(i);
+            }
+        }
+        return null;
+    }
+    public void capturePoint(int row, int col, int player) {
+        CapturePoint cp = getCapturePointAt(row, col);
+        if (cp != null && !cp.isCaptured()) {
+            cp.setOccupiedBy(player);
+            tiles[row][col].setValue(player); // captured point now shows player color
+            tiles[row][col].setTileSpecial(false);
+        }
+    }
+
+    public boolean allCapturePointsCaptured() {
+        if (capturePoints.isEmpty()) {
+            return false;
+        }
+
+        for (int i = 0; i < capturePoints.size(); i++) {
+            if (!capturePoints.get(i).isCaptured()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public int mostCapturePoints() {
+        int player1Count = 0;
+        int player2Count = 0;
+
+        for (int i = 0; i < capturePoints.size(); i++) {
+            if (capturePoints.get(i).getOccupiedBy() == 1) {
+                player1Count++;
+            } else if (capturePoints.get(i).getOccupiedBy() == 2) {
+                player2Count++;
+            }
+        }
+
+        if (player1Count > player2Count) {
+            return 1;
+        } else if (player2Count > player1Count) {
+            return 2;
+        }
+        return 3;
+    }
 }
+

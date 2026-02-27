@@ -5,6 +5,7 @@ public class Tile {
     private int tileValue;
     private int row;
     private int col;
+    private boolean occupied;
     private boolean special = false;
     public Tile(int r, int c,int value) {
         this.row = r;
@@ -26,5 +27,11 @@ public class Tile {
     }
     public void setTileSpecial(boolean special){
         this.special = special;
+    }
+    public boolean isSpecial(){
+        return special;
+    }
+    public boolean isOccupied(){
+        return occupied;
     }
 }

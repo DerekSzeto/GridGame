@@ -22,14 +22,15 @@ public class Wall {
         startingCol = c;
     }
     public void constructWall(Tile[][] tiles){
-        if(orientation.equals("h")) {
+        if(orientation.equals("H")) {
             for (int i = 0; i < wallLength; i++) {
-                if(tiles[i][startingCol+i].getValue()==4) {
+                if(tiles[startingRow][startingCol+i].getValue()>0) {
                     break;
+                }else {
+                    tiles[startingRow][startingCol + i].setValue(9);
                 }
-                tiles[startingRow][startingCol + i].setValue(9);
             }
-        }else{
+        }else if(orientation.equals("V")) {
             for (int i = 0; i < wallLength; i++) {
                 if(tiles[startingRow+i][startingCol].getValue()==4) {
                     break;
@@ -38,7 +39,9 @@ public class Wall {
             }
         }
     }
-
+    public String getOrientation(){
+        return orientation;
+    }
     public int getLength() {
         return wallLength;
     }
