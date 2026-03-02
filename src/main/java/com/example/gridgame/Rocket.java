@@ -136,4 +136,8 @@ public class Rocket extends Piece{
             tiles[currentRow][currentCol].setValue(5);
         }
     }
+    @Override
+    public boolean canCapturePoint() {
+        return false;
+    }
 }

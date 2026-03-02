@@ -18,6 +18,9 @@ public class Player {
     private ArrayList<Integer> stationCount = new ArrayList<>();
 
     private int credits;
+    //charge piece stuff
+    private int chargeLevel = 0;
+    private boolean chargeReady = false;
 
     private String name;
     public Player(String name){
@@ -71,5 +74,24 @@ public class Player {
 
     public ArrayList<Wall> getPlayerWalls() {
         return walls;
+    }
+    public void addCharge() {
+        if (chargeLevel < 3) {
+            chargeLevel++;
+            chargeReady = true;
+        }
+    }
+
+    public int getChargeLevel() {
+        return chargeLevel;
+    }
+
+    public boolean isChargeReady() {
+        return chargeReady;
+    }
+
+    public void resetCharge() {
+        chargeLevel = 0;
+        chargeReady = false;
     }
 }

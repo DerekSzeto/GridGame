@@ -42,4 +42,8 @@ public class Zombie extends Piece{
         stations.add(new Virus(randomTile.getRow(),randomTile.getCol(),value));
         randomTile.setValue(6);
     }
+    @Override
+    public boolean canCapturePoint() {
+        return false;
+    }
 }

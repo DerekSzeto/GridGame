@@ -31,4 +31,8 @@ public class Shadow extends Piece{
     public void convert(int player, Tile[][] tiles){
         tiles[currentRow][currentCol].setValue(player);
     }
+    @Override
+    public boolean canCapturePoint() {
+        return false;
+    }
 }

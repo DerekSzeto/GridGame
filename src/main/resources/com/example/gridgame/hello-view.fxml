@@ -31,7 +31,7 @@
                      </font>
                   </Label>
                   <ListView fx:id="playerPiecesListView" layoutX="1399.0" layoutY="79.0" onMouseClicked="#selectPiece" prefHeight="123.0" prefWidth="193.0" />
-                  <Label fx:id="pieceSelectedLabel" layoutX="1403.0" layoutY="204.0" prefHeight="27.0" prefWidth="188.0" />
+                  <Label fx:id="pieceSelectedLabel" alignment="CENTER_RIGHT" layoutX="1324.0" layoutY="204.0" prefHeight="27.0" prefWidth="267.0" />
                   <ListView fx:id="playerBombListView" layoutX="1397.0" layoutY="311.0" prefHeight="123.0" prefWidth="193.0" />
                   <Label fx:id="clickableSelectedLabel" layoutX="1398.0" layoutY="581.0" prefHeight="25.0" prefWidth="195.0">
                      <font>
@@ -117,11 +117,6 @@
                      </font>
                   </Label>
                   <Button fx:id="chargePieceButton" disable="true" layoutX="1264.0" layoutY="79.0" mnemonicParsing="false" onAction="#chargePiece" prefHeight="35.0" prefWidth="131.0" text="Charge Piece">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="releasePieceButton" disable="true" layoutX="1263.0" layoutY="123.0" mnemonicParsing="false" onAction="#releasePiece" prefHeight="35.0" prefWidth="132.0" text="Release Piece">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>

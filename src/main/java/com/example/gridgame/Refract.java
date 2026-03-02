@@ -1,6 +1,4 @@
 package com.example.gridgame;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Refract extends Piece{
@@ -16,24 +14,19 @@ public class Refract extends Piece{
         int newCol = getNewCol();
 
         int collidedValue = tiles[newRow][newCol].getValue();
-
         if (collidedValue == 0) {
             currentRow = newRow;
             currentCol = newCol;
-
         } else if (collidedValue == value) {
             reflect();
-
             int bounceRow = getNewRow();
             int bounceCol = getNewCol();
-
             if (tiles[bounceRow][bounceCol].getValue() == 0) {
                 currentRow = bounceRow;
                 currentCol = bounceCol;
             }else{
                 canMove = false;
             }
-
         }else if(collidedValue == getCheckingValue()) {
             canMove = false;
 
@@ -121,12 +114,9 @@ public class Refract extends Piece{
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 if (i != 0 && j != 0) {
-                    int r = currentRow + i;
-                    int c = currentCol + j;
-
-                    if (r > 0 && r < tiles.length - 1 &&
-                            c > 0 && c < tiles[r].length - 1) {
-                        diagonals.add(tiles[r][c]);
+                    if (currentRow + i > 0 && currentRow + i < tiles.length - 1 &&
+                            currentCol + j > 0 && currentCol + j < tiles[currentRow + i].length - 1) {
+                        diagonals.add(tiles[currentRow + i][currentCol + j]);
                     }
                 }
             }

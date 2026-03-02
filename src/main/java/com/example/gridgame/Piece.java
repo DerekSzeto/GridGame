@@ -68,5 +68,7 @@ public class Piece {
     public boolean canMove() {
         return canMove;
     }
-
+    public boolean canCapturePoint() {
+        return true;
+    }
 }

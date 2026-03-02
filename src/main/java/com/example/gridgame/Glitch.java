@@ -17,14 +17,11 @@ public class Glitch extends Piece{
             for (int j = -1; j < 2; j++) {
                 if ((currentRow + i) > 0 && (currentRow + i) < tiles.length - 1 && (currentCol + j) > 0 && (currentCol + j) < tiles[currentRow + i].length - 1) {
                     if((i != 0 || j != 0)) {
-                        nearbyTiles.add(tiles[currentRow + i][currentCol + j]);
+                        if(tiles[currentRow+i][currentCol+j].getValue()==getCheckingValue()){
+                            nearbyTiles.add(tiles[currentRow + i][currentCol + j]);
+                        }
                     }
                 }
-            }
-        }
-        for (int i = nearbyTiles.size()-1; i >= 0; i--) {
-            if(nearbyTiles.get(i).getValue()==pieceValue){
-                nearbyTiles.remove(i);
             }
         }
 
@@ -32,12 +29,55 @@ public class Glitch extends Piece{
     }
 
     public void transpose(Tile[][] tiles) {
-        for (int i = 0; i < getNearbyOppositeTiles(tiles).size(); i++) {
+        ArrayList<Tile> nearbyOppositeTiles = getNearbyOppositeTiles(tiles);
+        ArrayList<Tile> sameTiles = getTiles(tiles,"same");
+        ArrayList<Tile> oppTiles = getTiles(tiles,"opposite");
 
+        int glitchChance = (int)((Math.random()*10)+1);
+        if(glitchChance<=3) {
+            for (int i = 0; i < nearbyOppositeTiles.size(); i++) {
+                ArrayList<Tile> nearestRow = getOppositeRowTile(tiles);
+                for (int j = 0; j < nearestRow.size(); j++) {
+                    nearestRow.get(j).setValue(pieceValue);
+                }
+            }
+        }else if (glitchChance<=7){
+            for (int i = 0; i < nearbyOppositeTiles.size(); i++) {
+                int randomTileIndex = (int)(Math.random()*sameTiles.size());
+                Tile randomSameTile = sameTiles.get(randomTileIndex);
+                randomSameTile.setValue(getCheckingValue());
+                nearbyOppositeTiles.get(i).setValue(pieceValue);
+                sameTiles.remove(randomTileIndex);
+            }
+        }else{
+            for (int i = 0; i < nearbyOppositeTiles.size(); i++) {
+                Tile randomSameTile = sameTiles.get((int)(Math.random()*sameTiles.size()));
+                Tile randomOppTile = oppTiles.get((int)(Math.random()*oppTiles.size()));
+
+                randomSameTile.setValue(getCheckingValue());
+                randomOppTile.setValue(pieceValue);
+
+                sameTiles.remove(randomSameTile);
+                sameTiles.remove(randomOppTile);
+            }
         }
     }
-    public void getNearestTile(){
-
+    public ArrayList<Tile> getTiles(Tile[][] tiles, String tileType){
+        ArrayList<Tile> tilesReturning = new ArrayList<>();
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                if(tileType.equals("same")) {
+                    if (tiles[i][j].getValue() == pieceValue) {
+                        tilesReturning.add(tiles[i][j]);
+                    }
+                }else if(tileType.equals("opposite")) {
+                    if (tiles[i][j].getValue() == getCheckingValue()) {
+                        tilesReturning.add(tiles[i][j]);
+                    }
+                }
+            }
+        }
+        return tilesReturning;
     }
     public ArrayList<Tile> getOppositeRowTile(Tile[][] tiles){
         ArrayList<Tile> runOfTiles = new ArrayList<>();

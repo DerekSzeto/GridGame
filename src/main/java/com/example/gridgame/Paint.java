@@ -20,4 +20,8 @@ public class Paint extends Piece {
             }
         }
     }
+    @Override
+    public boolean canCapturePoint() {
+        return false;
+    }
 }

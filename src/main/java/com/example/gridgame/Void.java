@@ -3,7 +3,7 @@ package com.example.gridgame;
 import java.util.ArrayList;
 
 public class Void extends Station{
-    private ArrayList<Tile> area = new ArrayList<>();
+
     private int radius = 1;
     public Void(int r, int c, int v){
         super(r,c,v);

@@ -45,7 +45,6 @@ public class HelloController {
     public ListView playerWallListView;
     public Label player1CreditLabel;
     public Label player2CreditLabel;
-    public Button releasePieceButton;
     public Button chargePieceButton;
 
     private Button[][] btn;
@@ -232,16 +231,21 @@ public class HelloController {
         player2CreditLabel.setText("Player 2's Credits: " + game.getPlayers()[1].getCredits());
         playerTurnLabel.setText("Player Turn: "+ game.getPlayerTurn());
 
-        Player currentPlayer =  game.getPlayers()[game.getPlayerTurn()-1];
+        Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
         if (currentPlayer.getSelectedPiece() == null) {
             pieceSelectedLabel.setText("Select a Piece");
         } else {
-            pieceSelectedLabel.setText(currentPlayer.getSelectedPiece() + " is selected");
+            if (currentPlayer.getSelectedPiece().equals("Charge")) {
+                pieceSelectedLabel.setText("Charge is selected | Stored Charge: " + currentPlayer.getChargeLevel());
+            } else {
+                pieceSelectedLabel.setText(currentPlayer.getSelectedPiece() + " is selected");
+            }
         }
 
         if (currentPlayer.getSelectedStation() != null) {
             stationSelectedLabel.setText(currentPlayer.getSelectedStation() + " is selected");
         }
+
 
         checkGameOver();
     }
@@ -250,6 +254,8 @@ public class HelloController {
         playerBombListView.getItems().clear();
         playerWallListView.getItems().clear();
         playerStationsListView.getItems().clear();
+        playerBombListView.setDisable(false);
+        playerStationsListView.setDisable(false);
         Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
         for (int j = 0; j < currentPlayer.getPieces().size(); j++) {
             playerPiecesListView.getItems().add(currentPlayer.getPieces().get(j) + " | Left: "+ currentPlayer.getArsenal().get(j));
@@ -311,6 +317,14 @@ public class HelloController {
 
     public void selectPiece(MouseEvent mouseEvent) {
         game.getPlayers()[game.getPlayerTurn()-1].setSelectedPiece(playerPiecesListView.getSelectionModel().getSelectedIndex());
+        Player currentPlayer = game.getPlayers()[game.getPlayerTurn()-1];
+
+        if (currentPlayer.getSelectedPiece().equals("Charge")) {
+            chargePieceButton.setDisable(false);
+        } else {
+            chargePieceButton.setDisable(true);
+        }
+
         updateScreen();
     }
 
@@ -319,6 +333,10 @@ public class HelloController {
         restartButton.setDisable(true);
         winnerLabel.setText("");
         game.setGameOver(false);
+
+        shopPiecesListView.setDisable(false);
+        shopClickablesListView.setDisable(false);
+        shopStationListView.setDisable(false);
 
         game.resetPlayerInventory();
         updatePlayerListViews();
@@ -331,7 +349,6 @@ public class HelloController {
                 gpane.getChildren().remove(btn[i][j]);
             }
         }
-
         handleClick();
     }
 
@@ -438,9 +455,16 @@ public class HelloController {
     }
 
     public void chargePiece(ActionEvent actionEvent) {
-    }
+        if (game.chargePiece()) {
+            warningLabel.setText("Charge increased. Turn skipped.");
+            runGameEvents();
+            updateScreen();
+        } else {
+            warningLabel.setText("You cannot charge right now.");
+        }
 
-    public void releasePiece(ActionEvent actionEvent) {
+        chargePieceButton.setDisable(true);
+
     }
 
     public void selectWall(MouseEvent mouseEvent) {

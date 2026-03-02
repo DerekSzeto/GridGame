@@ -11,13 +11,13 @@ public class Game {
     private Player player2 = new Player("boi2");
     private Player[] players = {player1, player2};
     private Shop shop = new Shop(players);
-    private int turnsUntilEndGame = 29;
+    private int turnsUntilEndGame = 0;
     private int whoIsBuying = 1;
     private ArrayList<CapturePoint> capturePoints = new ArrayList<>();
     private boolean endGame = false;
     private boolean crossActive = false;
     private int crossTick = 0;
-
+    private int activeChargePieces = 0;
     private boolean gameOver = false;
     public void incrementEndTurns(){
         turnsUntilEndGame++;
@@ -88,6 +88,17 @@ public class Game {
                 piecesShot.add(0,new Friction(r,c,tiles.length));
             } else if (pieceName.equals("Refract")) {
                 piecesShot.add(0,new Refract(r,c,playerTurn));
+            }else if(pieceName.equals("Glitch")){
+                piecesShot.add(0,new Glitch(r,c,playerTurn));
+            }else if(pieceName.equals("Charge")){
+                int chargeAmount = players[playerTurn - 1].getChargeLevel();
+
+                if (chargeAmount == 0) {
+                    chargeAmount = 1;
+                }
+
+                piecesShot.add(0, new Charge(r, c, playerTurn, chargeAmount));
+                players[playerTurn - 1].resetCharge();
             }
             piecesShot.getFirst().setInitialDirection(r,c,tiles);
             players[playerTurn-1].getArsenal().set(pieceIndex,players[playerTurn-1].getArsenal().get(pieceIndex)-1);
@@ -163,6 +174,7 @@ public class Game {
             players[i].getPieces().add(0,"Standard");
             players[i].getArsenal().add(0,99);
             players[i].setCredits(0);
+            players[i].resetCharge();
         }
         resetGameStuff();
     }
@@ -171,6 +183,7 @@ public class Game {
         crossActive = false;
         stations.clear();
         turnsUntilEndGame = 0;
+        activeChargePieces = 0;
         capturePoints.clear();
         endGame = false;
     }
@@ -291,7 +304,9 @@ public class Game {
     }
     //after collisions
     public void stopPiece(int piece) {
-        if (piecesShot.get(piece).getClass() == Piece.class) {
+        boolean setColor = false;
+        boolean removeNow = false;
+        if (piecesShot.get(piece).canCapturePoint()) {
             if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 12) {
                 capturePoint(piecesShot.get(piece).getCurrentRow(), piecesShot.get(piece).getCurrentCol(), playerTurn);
             }
@@ -308,6 +323,17 @@ public class Game {
                 crossTick = 4;
                 crossActive = true;
             };
+        }else if(piecesShot.get(piece) instanceof Glitch){
+            ((Glitch) piecesShot.get(piece)).transpose(tiles);
+        }else if (piecesShot.get(piece) instanceof Charge) {
+                int piecesCreated = ((Charge) piecesShot.get(piece)).releaseChargePiece(tiles, piecesShot);
+                activeChargePieces += piecesCreated;
+
+                if (piecesCreated == 0) {
+                    switchPlayer();
+                }
+
+                setColor = true;
         }else if (piecesShot.get(piece) instanceof Refract) {
 
 
@@ -324,26 +350,46 @@ public class Game {
 
         }
 
+        if(!setColor) {
+            //rocket trail temp value
+            rocketTrail();
 
-        //rocket trail temp value
-        rocketTrail();
 
+            if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 0 & !(piecesShot.get(piece) instanceof Eraser) & !(piecesShot.get(piece) instanceof Spiral)) {
+                tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].setValue(playerTurn);
+            }
 
-        if (tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 0 & !(piecesShot.get(piece) instanceof Eraser) & !(piecesShot.get(piece) instanceof Spiral)) {
-            tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].setValue(playerTurn);
-        }
+            inhalePieces();
 
-        inhalePieces();
+            if ((tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() < 4) | tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 6
+                    && !(piecesShot.get(piece) instanceof ManipulatedPiece) && !(piecesShot.get(piece) instanceof ChargedPiece)) {
+                switchPlayer();
+            }
 
-        if ((tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() < 4 )|tiles[piecesShot.get(piece).getCurrentRow()][piecesShot.get(piece).getCurrentCol()].getValue() == 6
-        && !(piecesShot.get(piece) instanceof ManipulatedPiece)){
-            switchPlayer();
         }
 
         piecesShot.remove(piece);
 
+    }
+    public boolean chargePiece() {
+        Player currentPlayer = players[playerTurn - 1];
 
+        if (!currentPlayer.getSelectedPiece().equals("Charge")) {
+            return false;
+        }
 
+        int chargeIndex = currentPlayer.getPieces().indexOf("Charge");
+        if (chargeIndex == -1) {
+            return false;
+        }
+
+        if (currentPlayer.getArsenal().get(chargeIndex) <= 0) {
+            return false;
+        }
+
+        currentPlayer.addCharge();
+        switchPlayer();
+        return true;
     }
     public void inhalePieces(){
         for (int i = 0; i < stations.size(); i++) {
@@ -484,9 +530,6 @@ public class Game {
         currentPlayer.getPlayerWalls().remove(wallIndex);
 
         switchPlayer();
-    }
-    public void chargePiece(){
-
     }
 
     public void setEndGame(boolean b) {
