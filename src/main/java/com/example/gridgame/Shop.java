@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Shop {
     private static String[] piecesNames = {"Shadow","Friction","Cross","Paint","Zombie","Charge","Glitch","Refract","Rocket","Spiral","Eraser",};
-    private static int[] piecePrices = new int[piecesNames.length]; // <---- change ts later
+    private static int[] piecePrices = {2,3,3,6,10,8,8,10,12,15,8}; // <---- change ts later
     private static String[] piecesInfo = {
         "The Shadow moves with subtlety, making it difficult for opponents to predict its path and respond effectively. It is best used to create pressure in contested spaces while disrupting the enemy’s sense of control.",
             "Friction interferes with movement, slowing the flow of nearby pieces and making repositioning more difficult. Its effect is especially useful for limiting mobility and controlling key lanes on the board.",
@@ -22,13 +22,13 @@ public class Shop {
 
 
     private static String[] clickableNames = {"Grenade","Bomb","Wall"};
-    private static int[] clickablePrices = {0,0,0};
+    private static int[] clickablePrices = {6,10,5};
     private int[] clickablesStock = {(int)(Math.random() * 4) + 1 ,(int)(Math.random() * 4) + 1 ,(int)(Math.random() * 4) + 1 };
     private static String[] clickableInfo = {"Detonates on use, clearing all pieces and obstacles in the eight surrounding tiles (1-tile radius) while leaving the center tile intact."
     ,"Upon activation, this device clears all pieces and obstacles within an extended radius, affecting a significantly larger area than the standard shockwave item. Its wide-range effect makes it strategically valuable for disrupting clustered formations and shifting board control."
     ,"When placed, this structure automatically extends outward in a straight line from the placement tile, building horizontally from left to right and vertically from top to bottom according to its orientation. The wall continues constructing until it reaches the board boundary or an occupied tile, creating a continuous barrier that can block movement and control space."};
     private static String[] stationNames = {"Void","Smoke","Magnet"};
-    private static int[] stationPrices = {0,0,0,0,0};
+    private static int[] stationPrices = {8,6,8};
     private static String[] stationInfo = {
             "The Void removes whatever occupies the selected tile, creating an empty space that can disrupt formations and open new paths on the board. Its precision makes it especially useful for breaking key positions without affecting surrounding tiles.",
             "Smoke spreads across the surrounding area and temporarily obscures nearby tiles, making movement through that space less predictable. It is best used to interfere with positioning and create short-term control over a section of the grid.",

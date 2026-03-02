@@ -473,7 +473,7 @@ public class HelloController {
     }
     public void endGame(){
         if (!game.isEndGame()) {
-            if (game.getEndGameTurns() >= 30) {
+            if (game.getEndGameTurns() >= 50) {
                 game.setEndGame(true);
                 resetGrid(new ActionEvent());
                 game.spawnCapturePoints();
